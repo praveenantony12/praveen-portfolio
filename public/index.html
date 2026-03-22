@@ -634,9 +634,97 @@ footer {
   .agent-layout { grid-template-columns: 1fr; }
   footer { flex-direction: column; gap: 1rem; text-align: center; }
 }
+
+/* ─── COLD START LOADER ─────────────────────────────────── */
+#cold-loader {
+  position: fixed; inset: 0; z-index: 99999;
+  background: var(--ink);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 2rem; padding: 2rem;
+  transition: opacity 0.8s ease, visibility 0.8s ease;
+}
+#cold-loader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+#cold-loader .grid-bg {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 100%);
+  animation: grid-pulse 4s ease-in-out infinite;
+}
+@keyframes grid-pulse { 0%,100%{opacity:0.5} 50%{opacity:1} }
+#cold-loader .loader-logo { text-align: center; position: relative; z-index: 1; }
+#cold-loader .loader-name {
+  font-family: var(--font-head);
+  font-size: clamp(2.2rem, 6vw, 3.5rem);
+  font-weight: 800; color: var(--paper);
+  letter-spacing: -0.02em; line-height: 1;
+}
+#cold-loader .loader-name span { color: var(--amber); }
+#cold-loader .loader-sub {
+  font-family: var(--font-mono);
+  font-size: 0.7rem; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--muted);
+  margin-top: 0.5rem;
+}
+.boot-seq { width: 100%; max-width: 400px; position: relative; z-index: 1; }
+.boot-line {
+  font-family: var(--font-mono);
+  font-size: 0.72rem; letter-spacing: 0.05em;
+  color: var(--muted); padding: 0.22rem 0;
+  display: flex; gap: 0.75rem; align-items: center;
+  opacity: 0; transform: translateX(-8px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+.boot-line.bl-visible { opacity: 1; transform: translateX(0); }
+.boot-line .bl-icon { transition: color 0.3s; flex-shrink: 0; }
+.boot-line.bl-running .bl-icon { color: var(--amber); animation: bl-spin 0.8s linear infinite; }
+.boot-line.bl-done .bl-icon { color: #4ade80; }
+.boot-line .bl-label { flex: 1; }
+.boot-line .bl-status { font-size: 0.65rem; }
+.boot-line.bl-running .bl-status { color: var(--amber); }
+.boot-line.bl-done .bl-status { color: #4ade80; }
+@keyframes bl-spin { to { transform: rotate(360deg); } }
+.loader-progress-wrap {
+  width: 100%; max-width: 400px; height: 2px;
+  background: rgba(232,160,32,0.12);
+  position: relative; z-index: 1; border-radius: 1px;
+}
+.loader-progress-fill {
+  height: 100%; background: var(--amber);
+  border-radius: 1px; width: 0%;
+  transition: width 0.6s ease;
+}
+.loader-tagline {
+  font-family: var(--font-mono);
+  font-size: 0.72rem; letter-spacing: 0.08em;
+  color: rgba(107,112,128,0.7);
+  text-align: center; position: relative; z-index: 1;
+  font-style: italic; transition: opacity 0.4s;
+}
 </style>
 </head>
 <body>
+
+<!-- COLD START LOADER -->
+<div id="cold-loader">
+  <div class="grid-bg"></div>
+  <div class="loader-logo">
+    <div class="loader-name">Praveen <span>Antony</span></div>
+    <div class="loader-sub">Full-Stack AI Developer &middot; Initialising</div>
+  </div>
+  <div class="boot-seq" id="boot-seq">
+    <div class="boot-line" id="bl-0"><span class="bl-icon">&#9678;</span><span class="bl-label">Waking up server instance</span><span class="bl-status">&mdash;</span></div>
+    <div class="boot-line" id="bl-1"><span class="bl-icon">&#9678;</span><span class="bl-label">Loading AI agent context</span><span class="bl-status">&mdash;</span></div>
+    <div class="boot-line" id="bl-2"><span class="bl-icon">&#9678;</span><span class="bl-label">Mounting project manifests</span><span class="bl-status">&mdash;</span></div>
+    <div class="boot-line" id="bl-3"><span class="bl-icon">&#9678;</span><span class="bl-label">Configuring guardrails</span><span class="bl-status">&mdash;</span></div>
+    <div class="boot-line" id="bl-4"><span class="bl-icon">&#9678;</span><span class="bl-label">Recruiter mode: ready</span><span class="bl-status">&mdash;</span></div>
+  </div>
+  <div class="loader-progress-wrap"><div class="loader-progress-fill" id="loader-bar"></div></div>
+  <div class="loader-tagline" id="loader-tagline">Cold starts happen. Great engineers ship anyway.</div>
+</div>
 
 <div id="cursor-dot"></div>
 <div id="cursor-ring"></div>
@@ -1051,5 +1139,92 @@ inputEl.addEventListener('keydown', e => {
   if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(inputEl.value); }
 });
 </script>
+
+<script>
+/* ─── COLD START LOADER ───────────────────────────────────── */
+(function() {
+  const TAGLINES = [
+    'Cold starts happen. Great engineers ship anyway.',
+    'Multi-agent orchestration loading…',
+    'Guardrails: engaged. Workflows: armed.',
+    'Every agent needs a warm-up.',
+    'Worth the wait — promise.'
+  ];
+  const BOOT_LINES = [
+    { id: 'bl-0', startMs: 300,  doneMs: 1100 },
+    { id: 'bl-1', startMs: 1300, doneMs: 2200 },
+    { id: 'bl-2', startMs: 2400, doneMs: 3200 },
+    { id: 'bl-3', startMs: 3400, doneMs: 4300 },
+    { id: 'bl-4', startMs: 4500, doneMs: 5400 },
+  ];
+  const PROGRESS_STEPS = [10, 30, 52, 72, 92];
+
+  const loader   = document.getElementById('cold-loader');
+  const bar      = document.getElementById('loader-bar');
+  const tagEl    = document.getElementById('loader-tagline');
+  let tagIdx     = 0;
+  let pollTimer  = null;
+  let dismissed  = false;
+
+  function setLine(id, state) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.classList.add('bl-visible');
+    const icon   = el.querySelector('.bl-icon');
+    const status = el.querySelector('.bl-status');
+    if (state === 'running') {
+      el.classList.add('bl-running');
+      icon.textContent   = '↻';
+      status.textContent = 'running…';
+    } else {
+      el.classList.remove('bl-running');
+      el.classList.add('bl-done');
+      icon.textContent   = '✓';
+      status.textContent = 'done';
+    }
+  }
+
+  function cycleTags() {
+    tagIdx = (tagIdx + 1) % TAGLINES.length;
+    tagEl.style.opacity = '0';
+    setTimeout(() => {
+      tagEl.textContent  = TAGLINES[tagIdx];
+      tagEl.style.opacity = '0.7';
+    }, 350);
+  }
+
+  function dismiss() {
+    if (dismissed) return;
+    dismissed = true;
+    if (pollTimer) clearInterval(pollTimer);
+    bar.style.width = '100%';
+    // Make sure last line shows done
+    BOOT_LINES.forEach(l => setLine(l.id, 'done'));
+    setTimeout(() => { loader.classList.add('hidden'); }, 700);
+  }
+
+  // Kick off boot animation
+  BOOT_LINES.forEach((line, i) => {
+    setTimeout(() => { setLine(line.id, 'running'); bar.style.width = PROGRESS_STEPS[i] * 0.5 + '%'; }, line.startMs);
+    setTimeout(() => { setLine(line.id, 'done');    bar.style.width = PROGRESS_STEPS[i] + '%'; },      line.doneMs);
+  });
+
+  // Cycle taglines every 2.5s
+  const tagTimer = setInterval(cycleTags, 2500);
+
+  // Poll /health every 2s — dismiss as soon as server responds
+  function poll() {
+    fetch('/health', { cache: 'no-store' })
+      .then(r => { if (r.ok) { clearInterval(tagTimer); dismiss(); } })
+      .catch(() => {}); // server still asleep — keep polling
+  }
+  // First poll after 1s, then every 2s
+  setTimeout(() => { poll(); pollTimer = setInterval(poll, 2000); }, 1000);
+
+  // Safety net: always dismiss after 35s even if health never responds
+  setTimeout(() => { clearInterval(tagTimer); dismiss(); }, 35000);
+})();
+</script>
+
 </body>
 </html>
