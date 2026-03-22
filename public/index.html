@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Praveen Antony — Full-Stack AI Developer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:ital,wght@0,300;0,400;1,300&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;1,9..144,300&display=swap" rel="stylesheet" />
+
+<style>
+/* ─── RESET & BASE ─────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --ink:     #0b0c10;
+  --paper:   #f5f0e8;
+  --amber:   #e8a020;
+  --amber2:  #f5c842;
+  --slate:   #1a1d27;
+  --slate2:  #252836;
+  --muted:   #6b7080;
+  --line:    rgba(232,160,32,0.18);
+  --font-head: 'Syne', sans-serif;
+  --font-body: 'Fraunces', serif;
+  --font-mono: 'DM Mono', monospace;
+}
+html { scroll-behavior: smooth; }
+body {
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.7;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* ─── CUSTOM CURSOR ─────────────────────────────────────── */
+#cursor-dot {
+  width: 8px; height: 8px;
+  background: var(--amber);
+  border-radius: 50%;
+  position: fixed; top: 0; left: 0;
+  pointer-events: none; z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: transform 0.08s ease;
+}
+#cursor-ring {
+  width: 32px; height: 32px;
+  border: 1.5px solid var(--amber);
+  border-radius: 50%;
+  position: fixed; top: 0; left: 0;
+  pointer-events: none; z-index: 9998;
+  transform: translate(-50%, -50%);
+  transition: transform 0.22s ease, width 0.22s ease, height 0.22s ease, opacity 0.22s ease;
+  opacity: 0.5;
+}
+body:hover #cursor-ring { opacity: 1; }
+.cursor-expand #cursor-ring { width: 56px; height: 56px; opacity: 0.3; }
+
+/* ─── NOISE OVERLAY ─────────────────────────────────────── */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 9000; opacity: 0.35;
+}
+
+/* ─── SCROLLBAR ─────────────────────────────────────────── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--ink); }
+::-webkit-scrollbar-thumb { background: var(--amber); border-radius: 2px; }
+
+/* ─── NAV ───────────────────────────────────────────────── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 1.2rem 4rem;
+  border-bottom: 1px solid var(--line);
+  backdrop-filter: blur(16px);
+  background: rgba(11,12,16,0.7);
+}
+.nav-logo {
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-size: 1.1rem;
+  letter-spacing: 0.06em;
+  color: var(--paper);
+  text-decoration: none;
+}
+.nav-logo span { color: var(--amber); }
+.nav-links { display: flex; gap: 2.5rem; list-style: none; }
+.nav-links a {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--amber); }
+
+/* ─── HERO ──────────────────────────────────────────────── */
+#hero {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  padding: 8rem 4rem 4rem;
+  position: relative;
+  overflow: hidden;
+}
+.hero-grid-bg {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
+}
+.hero-orb {
+  position: absolute;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(232,160,32,0.12) 0%, transparent 65%);
+  top: 50%; left: 55%; transform: translate(-50%, -50%);
+  animation: pulse-orb 6s ease-in-out infinite;
+}
+@keyframes pulse-orb {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+  50%       { transform: translate(-50%, -50%) scale(1.12); opacity: 1; }
+}
+.hero-left { position: relative; z-index: 1; }
+.hero-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 1.2rem;
+  display: flex; align-items: center; gap: 0.75rem;
+}
+.hero-eyebrow::before {
+  content: ''; display: inline-block;
+  width: 32px; height: 1px; background: var(--amber);
+}
+h1.hero-name {
+  font-family: var(--font-head);
+  font-size: clamp(3.5rem, 7vw, 6.5rem);
+  font-weight: 800;
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  margin-bottom: 1.5rem;
+}
+h1.hero-name .line1 { display: block; }
+h1.hero-name .line2 { display: block; color: var(--amber); }
+.hero-bio {
+  font-size: 1.1rem;
+  color: rgba(245,240,232,0.7);
+  max-width: 480px;
+  margin-bottom: 2.5rem;
+  font-style: italic;
+  font-weight: 300;
+}
+.hero-bio strong { color: var(--paper); font-style: normal; font-weight: 700; }
+.hero-ctas { display: flex; gap: 1rem; flex-wrap: wrap; }
+.btn-primary {
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: var(--amber);
+  color: var(--ink);
+  border: none;
+  padding: 0.9rem 2rem;
+  cursor: none;
+  text-decoration: none;
+  transition: background 0.2s, transform 0.2s;
+  display: inline-flex; align-items: center; gap: 0.5rem;
+}
+.btn-primary:hover { background: var(--amber2); transform: translateY(-2px); }
+.btn-ghost {
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: transparent;
+  color: var(--paper);
+  border: 1px solid rgba(245,240,232,0.3);
+  padding: 0.9rem 2rem;
+  cursor: none;
+  text-decoration: none;
+  transition: border-color 0.2s, color 0.2s, transform 0.2s;
+  display: inline-flex; align-items: center; gap: 0.5rem;
+}
+.btn-ghost:hover { border-color: var(--amber); color: var(--amber); transform: translateY(-2px); }
+
+.hero-right {
+  position: relative; z-index: 1;
+  display: flex; flex-direction: column; gap: 1rem; align-items: flex-end;
+}
+.hero-stat-card {
+  background: rgba(37,40,54,0.6);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--amber);
+  padding: 1.2rem 1.5rem;
+  backdrop-filter: blur(8px);
+  width: 260px;
+  animation: float-card 5s ease-in-out infinite;
+}
+.hero-stat-card:nth-child(2) { animation-delay: -1.5s; margin-right: 2rem; }
+.hero-stat-card:nth-child(3) { animation-delay: -3s; }
+@keyframes float-card {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-8px); }
+}
+.stat-label {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.3rem;
+}
+.stat-value {
+  font-family: var(--font-head);
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--amber);
+}
+.stat-sub {
+  font-size: 0.82rem;
+  color: rgba(245,240,232,0.5);
+  font-style: italic;
+}
+
+/* ─── SECTION SHARED ────────────────────────────────────── */
+section { padding: 7rem 4rem; position: relative; }
+.section-label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 1rem;
+  display: flex; align-items: center; gap: 0.75rem;
+}
+.section-label::after {
+  content: ''; flex: 1;
+  height: 1px; background: var(--line);
+  max-width: 200px;
+}
+h2.section-title {
+  font-family: var(--font-head);
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  font-weight: 800;
+  line-height: 1.05;
+  margin-bottom: 1rem;
+}
+
+/* ─── ABOUT ─────────────────────────────────────────────── */
+#about { background: var(--slate); }
+.about-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 5rem;
+  align-items: start;
+  margin-top: 3rem;
+}
+.about-text p {
+  font-size: 1.05rem;
+  color: rgba(245,240,232,0.8);
+  margin-bottom: 1.2rem;
+  font-weight: 300;
+}
+.about-text p strong { color: var(--paper); font-weight: 700; }
+.about-text p em { color: var(--amber); font-style: italic; }
+
+.stack-grid { display: flex; flex-direction: column; gap: 0.75rem; }
+.stack-item {
+  display: flex; align-items: center; gap: 1rem;
+  font-family: var(--font-mono); font-size: 0.82rem;
+  color: var(--muted);
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--line);
+}
+.stack-item .tag {
+  background: rgba(232,160,32,0.12);
+  color: var(--amber);
+  border: 1px solid rgba(232,160,32,0.25);
+  padding: 0.15rem 0.6rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.links-row { display: flex; gap: 1rem; margin-top: 2rem; flex-wrap: wrap; }
+.link-pill {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  border: 1px solid var(--line);
+  padding: 0.4rem 1rem;
+  text-decoration: none;
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  transition: color 0.2s, border-color 0.2s;
+}
+.link-pill:hover { color: var(--amber); border-color: var(--amber); }
+.link-pill svg { width: 14px; height: 14px; }
+
+/* ─── PROJECTS ───────────────────────────────────────────── */
+#projects { background: var(--ink); }
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5px;
+  margin-top: 3rem;
+  background: var(--line);
+}
+.project-card {
+  background: var(--ink);
+  padding: 2.5rem;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.3s;
+  cursor: none;
+}
+.project-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--amber);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.35s ease;
+}
+.project-card:hover { background: var(--slate2); }
+.project-card:hover::before { transform: scaleX(1); }
+.project-card.placeholder { opacity: 0.45; }
+.project-card.placeholder:hover { opacity: 0.65; }
+
+.project-num {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--amber);
+  letter-spacing: 0.15em;
+  margin-bottom: 1.5rem;
+}
+.project-icon {
+  font-size: 2.2rem;
+  margin-bottom: 1rem;
+  display: block;
+  filter: grayscale(0.3);
+}
+.project-title {
+  font-family: var(--font-head);
+  font-size: 1.35rem;
+  font-weight: 800;
+  margin-bottom: 0.75rem;
+  line-height: 1.2;
+}
+.project-desc {
+  font-size: 0.9rem;
+  color: rgba(245,240,232,0.6);
+  margin-bottom: 1.5rem;
+  font-style: italic;
+  font-weight: 300;
+  line-height: 1.6;
+}
+.project-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1.5rem; }
+.ptag {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border: 1px solid var(--line);
+  padding: 0.2rem 0.55rem;
+}
+.project-link {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--amber);
+  text-decoration: none;
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  transition: gap 0.2s;
+}
+.project-link:hover { gap: 0.8rem; }
+.project-link .arrow { transition: transform 0.2s; }
+.project-link:hover .arrow { transform: translateX(3px); }
+
+/* ─── AGENT CHAT ────────────────────────────────────────── */
+#agent {
+  background: var(--slate);
+  position: relative;
+  overflow: hidden;
+}
+.agent-bg-text {
+  position: absolute;
+  font-family: var(--font-head);
+  font-size: 18vw;
+  font-weight: 800;
+  color: rgba(232,160,32,0.03);
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  white-space: nowrap;
+  letter-spacing: -0.05em;
+}
+.agent-layout {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 4rem;
+  align-items: start;
+  margin-top: 3rem;
+  position: relative;
+  z-index: 1;
+}
+.agent-intro h2 { margin-bottom: 1rem; }
+.agent-intro p {
+  font-size: 1rem;
+  color: rgba(245,240,232,0.65);
+  font-style: italic;
+  font-weight: 300;
+  margin-bottom: 2rem;
+}
+.agent-features { display: flex; flex-direction: column; gap: 1rem; }
+.agent-feature {
+  display: flex; align-items: flex-start; gap: 1rem;
+  font-size: 0.9rem; color: rgba(245,240,232,0.7);
+}
+.agent-feature-icon {
+  font-size: 1.2rem; flex-shrink: 0;
+  width: 36px; height: 36px;
+  background: rgba(232,160,32,0.1);
+  border: 1px solid var(--line);
+  display: grid; place-items: center;
+}
+
+/* CHAT UI */
+.chat-container {
+  background: rgba(11,12,16,0.7);
+  border: 1px solid var(--line);
+  display: flex; flex-direction: column;
+  height: 580px;
+  backdrop-filter: blur(12px);
+  position: relative;
+}
+.chat-header {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--line);
+  display: flex; align-items: center; gap: 0.75rem;
+  background: rgba(37,40,54,0.4);
+}
+.chat-status-dot {
+  width: 8px; height: 8px;
+  background: #4ade80;
+  border-radius: 50%;
+  animation: blink 2s ease-in-out infinite;
+}
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.3; }
+}
+.chat-header-title {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  color: var(--paper);
+}
+.chat-header-sub {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--muted);
+  margin-left: auto;
+}
+.chat-messages {
+  flex: 1; overflow-y: auto;
+  padding: 1.5rem;
+  display: flex; flex-direction: column;
+  gap: 1rem;
+  scroll-behavior: smooth;
+}
+.chat-messages::-webkit-scrollbar { width: 3px; }
+.chat-messages::-webkit-scrollbar-thumb { background: var(--line); }
+
+.msg {
+  display: flex; gap: 0.75rem; max-width: 85%;
+  animation: msg-in 0.35s ease forwards;
+  opacity: 0;
+}
+@keyframes msg-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.msg.agent { align-self: flex-start; }
+.msg.user  { align-self: flex-end; flex-direction: row-reverse; }
+.msg-avatar {
+  width: 30px; height: 30px; flex-shrink: 0;
+  background: rgba(232,160,32,0.15);
+  border: 1px solid var(--line);
+  display: grid; place-items: center;
+  font-size: 0.85rem;
+  font-family: var(--font-mono);
+  color: var(--amber);
+}
+.msg.user .msg-avatar { background: rgba(245,240,232,0.08); color: var(--muted); }
+.msg-bubble {
+  background: rgba(37,40,54,0.8);
+  border: 1px solid var(--line);
+  padding: 0.75rem 1rem;
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: rgba(245,240,232,0.85);
+  font-style: italic;
+  font-weight: 300;
+}
+.msg.user .msg-bubble {
+  background: rgba(232,160,32,0.1);
+  border-color: rgba(232,160,32,0.2);
+  color: var(--paper);
+}
+.msg-bubble strong { color: var(--amber); font-style: normal; }
+
+.typing-indicator {
+  display: flex; gap: 4px; align-items: center; padding: 0.4rem 0;
+}
+.typing-dot {
+  width: 5px; height: 5px;
+  background: var(--amber);
+  border-radius: 50%;
+  animation: typing-bounce 1.2s ease-in-out infinite;
+}
+.typing-dot:nth-child(2) { animation-delay: 0.2s; }
+.typing-dot:nth-child(3) { animation-delay: 0.4s; }
+@keyframes typing-bounce {
+  0%, 100% { transform: translateY(0); opacity: 0.4; }
+  50%       { transform: translateY(-4px); opacity: 1; }
+}
+
+.chat-input-row {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid var(--line);
+  display: flex; gap: 0.75rem;
+  background: rgba(37,40,54,0.3);
+}
+#chat-input {
+  flex: 1;
+  background: rgba(11,12,16,0.6);
+  border: 1px solid var(--line);
+  color: var(--paper);
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  padding: 0.7rem 1rem;
+  outline: none;
+  transition: border-color 0.2s;
+  resize: none;
+}
+#chat-input:focus { border-color: var(--amber); }
+#chat-input::placeholder { color: var(--muted); }
+#send-btn {
+  background: var(--amber);
+  border: none; color: var(--ink);
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0 1.2rem;
+  cursor: none;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+#send-btn:hover { background: var(--amber2); }
+
+.chat-disclaimer {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  color: var(--muted);
+  text-align: center;
+  padding: 0.5rem;
+  border-top: 1px solid var(--line);
+  letter-spacing: 0.06em;
+}
+
+/* ─── FOOTER ────────────────────────────────────────────── */
+footer {
+  padding: 3rem 4rem;
+  border-top: 1px solid var(--line);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--ink);
+}
+.footer-left {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+}
+.footer-left span { color: var(--amber); }
+.footer-right { display: flex; gap: 1.5rem; }
+.footer-link {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--muted);
+  text-decoration: none;
+  letter-spacing: 0.08em;
+  transition: color 0.2s;
+}
+.footer-link:hover { color: var(--amber); }
+
+/* ─── ANIMATIONS ────────────────────────────────────────── */
+.fade-up {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.65s ease, transform 0.65s ease;
+}
+.fade-up.visible { opacity: 1; transform: translateY(0); }
+
+/* ─── RESPONSIVE ────────────────────────────────────────── */
+@media (max-width: 900px) {
+  nav { padding: 1rem 1.5rem; }
+  .nav-links { display: none; }
+  #hero { grid-template-columns: 1fr; padding: 7rem 1.5rem 3rem; }
+  .hero-right { display: none; }
+  section { padding: 5rem 1.5rem; }
+  .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+  .projects-grid { grid-template-columns: 1fr; }
+  .agent-layout { grid-template-columns: 1fr; }
+  footer { flex-direction: column; gap: 1rem; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<div id="cursor-dot"></div>
+<div id="cursor-ring"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#hero" class="nav-logo">PA<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#agent">Talk to my AI</a></li>
+    <li><a href="https://github.com/praveenantony12" target="_blank">GitHub</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-orb"></div>
+
+  <div class="hero-left fade-up">
+    <div class="hero-eyebrow">Full-Stack AI Developer</div>
+    <h1 class="hero-name">
+      <span class="line1">Praveen</span>
+      <span class="line2">Antony</span>
+    </h1>
+    <p class="hero-bio">
+      I build <strong>agentic AI systems</strong> — orchestrating multi-agent workflows with
+      <em>guardrails, security, and intentional design</em>.
+      10+ years turning complex problems into elegant software.
+    </p>
+    <div class="hero-ctas">
+      <a href="#agent" class="btn-primary">
+        ⟶ &nbsp;Interview my AI
+      </a>
+      <a href="#projects" class="btn-ghost">
+        View Projects
+      </a>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="hero-stat-card fade-up" style="transition-delay:0.15s">
+      <div class="stat-label">Experience</div>
+      <div class="stat-value">10+</div>
+      <div class="stat-sub">years shipping production software</div>
+    </div>
+    <div class="hero-stat-card fade-up" style="transition-delay:0.3s">
+      <div class="stat-label">Stack</div>
+      <div class="stat-value">Full</div>
+      <div class="stat-sub">Python · Node · React · AWS · LLMs</div>
+    </div>
+    <div class="hero-stat-card fade-up" style="transition-delay:0.45s">
+      <div class="stat-label">Focus</div>
+      <div class="stat-value">Agents</div>
+      <div class="stat-sub">Multi-agent orchestration & workflows</div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-label">Background</div>
+  <h2 class="section-title fade-up">The Story So Far</h2>
+
+  <div class="about-grid">
+    <div class="about-text fade-up">
+      <p>
+        With <strong>10+ years of full-stack engineering</strong> under the belt, I'm now channeling that depth into the frontier of AI — specifically, <em>building agentic systems that actually work in production</em>.
+      </p>
+      <p>
+        I'm not just calling APIs. I'm architecting <strong>controlled, multi-agent workflows</strong> with proper guardrails, security boundaries, and feedback loops — the kind of systems that can be handed off to a real engineering team.
+      </p>
+      <p>
+        Every project I build teaches me something new about where AI agents break down and how to make them robust. I believe the next generation of software isn't just AI-assisted — <em>it's AI-orchestrated</em>.
+      </p>
+
+      <div class="links-row">
+        <a href="https://www.linkedin.com/in/praveenantony12/" target="_blank" class="link-pill">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          LinkedIn
+        </a>
+        <a href="https://github.com/praveenantony12" target="_blank" class="link-pill">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+          GitHub
+        </a>
+      </div>
+    </div>
+
+    <div class="stack-grid fade-up" style="transition-delay:0.2s">
+      <div class="stack-item"><span class="tag">AI / ML</span> LLMs · LangChain · Agentic Workflows</div>
+      <div class="stack-item"><span class="tag">Backend</span> Python · Node.js · TypeScript</div>
+      <div class="stack-item"><span class="tag">Frontend</span> React · Next.js · PWA</div>
+      <div class="stack-item"><span class="tag">Cloud</span> AWS · GCP · Azure</div>
+      <div class="stack-item"><span class="tag">Infra</span> Docker · CI/CD · GitHub Actions</div>
+      <div class="stack-item"><span class="tag">Design</span> Guardrails · Security · Observability</div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-label">Work</div>
+  <h2 class="section-title fade-up">Projects</h2>
+  <p class="fade-up" style="color:rgba(245,240,232,0.5);font-style:italic;margin-top:0.25rem;margin-bottom:0;font-size:0.95rem;">
+    Each project is a real system, not a tutorial. Built with intention.
+  </p>
+
+  <div class="projects-grid" style="margin-top:3rem;">
+
+    <!-- Dev Agent -->
+    <div class="project-card fade-up">
+      <div class="project-num">01 / Agent Systems</div>
+      <span class="project-icon">🤖</span>
+      <div class="project-title">Dev Agent &amp; PR Generator</div>
+      <p class="project-desc">
+        A complete multi-agent pipeline that takes a user story for any GitHub repo and autonomously plans, codes, reviews, and runs CI/CD checks — finally submitting a real PR ready to merge.
+      </p>
+      <div class="project-tags">
+        <span class="ptag">LangChain</span>
+        <span class="ptag">Multi-Agent</span>
+        <span class="ptag">GitHub API</span>
+        <span class="ptag">CI/CD</span>
+        <span class="ptag">Planner · Dev · Reviewer</span>
+      </div>
+      <a href="https://github.com/praveenantony12" target="_blank" class="project-link">
+        View on GitHub <span class="arrow">→</span>
+      </a>
+    </div>
+
+    <!-- Bedtime Story -->
+    <div class="project-card fade-up" style="transition-delay:0.1s">
+      <div class="project-num">02 / Generative AI · PWA</div>
+      <span class="project-icon">🌙</span>
+      <div class="project-title">Bedtime Story Architect</div>
+      <p class="project-desc">
+        An AI-driven PWA built for kids. It greets children by name, listens to their story request, then generates a fully narrated, illustrated bedtime story — personalised in real time.
+      </p>
+      <div class="project-tags">
+        <span class="ptag">React</span>
+        <span class="ptag">TTS / Voice</span>
+        <span class="ptag">Image Gen</span>
+        <span class="ptag">PWA</span>
+        <span class="ptag">LLM</span>
+      </div>
+      <a href="https://github.com/praveenantony12" target="_blank" class="project-link">
+        View on GitHub <span class="arrow">→</span>
+      </a>
+    </div>
+
+    <!-- 56 Card Game -->
+    <div class="project-card fade-up" style="transition-delay:0.2s">
+      <div class="project-num">03 / Game AI · PWA</div>
+      <span class="project-icon">🃏</span>
+      <div class="project-title">Fifty Six — Card Game AI</div>
+      <p class="project-desc">
+        A classic 6-player South Indian partnership card game, rebuilt as an online PWA during COVID. Features a full rules engine and AI bots with human-like gameplay — so you can play solo or with friends.
+      </p>
+      <div class="project-tags">
+        <span class="ptag">Game AI</span>
+        <span class="ptag">Rules Engine</span>
+        <span class="ptag">Bots</span>
+        <span class="ptag">PWA</span>
+        <span class="ptag">Multiplayer</span>
+      </div>
+      <a href="https://github.com/praveenantony12" target="_blank" class="project-link">
+        View on GitHub <span class="arrow">→</span>
+      </a>
+    </div>
+
+    <!-- Placeholder 4 -->
+    <div class="project-card placeholder fade-up" style="transition-delay:0.3s">
+      <div class="project-num">04 / Coming Soon</div>
+      <span class="project-icon">⚗️</span>
+      <div class="project-title">Next Agent Project</div>
+      <p class="project-desc">
+        Leveling up agentic complexity. Follow the GitHub to see what's being built next.
+      </p>
+      <div class="project-tags">
+        <span class="ptag">In Progress</span>
+      </div>
+    </div>
+
+    <!-- Placeholder 5 -->
+    <div class="project-card placeholder fade-up" style="transition-delay:0.4s">
+      <div class="project-num">05 / Coming Soon</div>
+      <span class="project-icon">🧠</span>
+      <div class="project-title">TBD — Agentic Workflow</div>
+      <p class="project-desc">
+        Every project goes a notch higher. Watch this space.
+      </p>
+      <div class="project-tags">
+        <span class="ptag">In Progress</span>
+      </div>
+    </div>
+
+    <!-- Placeholder 6 -->
+    <div class="project-card placeholder fade-up" style="transition-delay:0.5s">
+      <div class="project-num">06 / Coming Soon</div>
+      <span class="project-icon">🔭</span>
+      <div class="project-title">TBD — AI Systems</div>
+      <p class="project-desc">
+        The frontier moves fast. So does the portfolio.
+      </p>
+      <div class="project-tags">
+        <span class="ptag">In Progress</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- AGENT CHAT -->
+<section id="agent">
+  <div class="agent-bg-text">ASK</div>
+  <div class="section-label">Recruiter Experience</div>
+
+  <div class="agent-layout">
+    <div class="agent-intro fade-up">
+      <h2 class="section-title">My AI Interviews <em style="color:var(--amber)">You</em></h2>
+      <p>
+        This isn't a chatbot that answers FAQs. It's an agent that
+        <strong style="color:var(--paper)">flips the dynamic</strong> — it asks smart questions
+        about your company, your engineering challenges, and what you're hiring for.
+        Then it tells you exactly how Praveen maps to your needs.
+      </p>
+      <div class="agent-features">
+        <div class="agent-feature">
+          <div class="agent-feature-icon">🎯</div>
+          <div>Probes your team's real challenges — not just job title keywords</div>
+        </div>
+        <div class="agent-feature">
+          <div class="agent-feature-icon">🗺️</div>
+          <div>Maps Praveen's specific projects to your engineering problems</div>
+        </div>
+        <div class="agent-feature">
+          <div class="agent-feature-icon">✍️</div>
+          <div>Generates a tailored "why hire Praveen" pitch for your company</div>
+        </div>
+        <div class="agent-feature">
+          <div class="agent-feature-icon">🔄</div>
+          <div>Multi-turn conversation — it remembers context across the session</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fade-up" style="transition-delay:0.15s">
+      <div class="chat-container">
+        <div class="chat-header">
+          <div class="chat-status-dot"></div>
+          <div class="chat-header-title">Praveen's AI — Recruiter Mode</div>
+          <div class="chat-header-sub">Powered by Claude</div>
+        </div>
+        <div class="chat-messages" id="chat-messages">
+          <!-- Initial message injected by JS -->
+        </div>
+        <div class="chat-disclaimer">
+          ⚡ Live AI · Powered by Anthropic Claude · Context-aware multi-turn
+        </div>
+        <div class="chat-input-row">
+          <textarea id="chat-input" rows="1" placeholder="Tell me about your company or role..."></textarea>
+          <button id="send-btn">Send →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-left">
+    © 2025 <span>Praveen Antony</span> · Built with intention &amp; Claude API
+  </div>
+  <div class="footer-right">
+    <a href="https://www.linkedin.com/in/praveenantony12/" target="_blank" class="footer-link">LinkedIn</a>
+    <a href="https://github.com/praveenantony12" target="_blank" class="footer-link">GitHub</a>
+    <a href="#agent" class="footer-link">Talk to my AI</a>
+  </div>
+</footer>
+
+<script>
+/* ─── CURSOR ───────────────────────────────────── */
+const dot  = document.getElementById('cursor-dot');
+const ring = document.getElementById('cursor-ring');
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+(function animCursor() {
+  rx += (mx - rx) * 0.12;
+  ry += (my - ry) * 0.12;
+  dot.style.left  = mx + 'px';
+  dot.style.top   = my + 'px';
+  ring.style.left = rx + 'px';
+  ring.style.top  = ry + 'px';
+  requestAnimationFrame(animCursor);
+})();
+document.querySelectorAll('a,button,textarea').forEach(el => {
+  el.addEventListener('mouseenter', () => document.body.classList.add('cursor-expand'));
+  el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-expand'));
+});
+
+/* ─── SCROLL ANIMATIONS ────────────────────────── */
+const observer = new IntersectionObserver(
+  entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
+  { threshold: 0.12 }
+);
+document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+/* ─── CHAT ──────────────────────────────────────── */
+const PROFILE = `
+You are an AI agent representing Praveen Antony, a Full-Stack AI Developer with 10+ years of experience now specialising in agentic AI systems.
+
+About Praveen:
+- 10+ years in full-stack engineering (Python, Node.js/TypeScript, React/Next.js, AWS/GCP/Azure)
+- Transitioning into AI engineering with a focus on multi-agent orchestration, guardrails, and production-ready agentic workflows
+- Projects:
+  1. Dev Agent & PR Generator: A multi-agent system (Planner, Developer, Reviewer, CI/CD) that takes a GitHub user story and autonomously generates a mergeable PR
+  2. Bedtime Story Architect: An AI-driven PWA for kids that generates personalised narrated and illustrated bedtime stories in real time
+  3. Fifty Six Card Game: A classic 6-player South Indian card game rebuilt as an online PWA with a full rules engine and AI bots replicating human-like gameplay
+- LinkedIn: https://www.linkedin.com/in/praveenantony12/
+- GitHub: https://github.com/praveenantony12
+
+YOUR ROLE:
+You are a REVERSE INTERVIEW AGENT. You do NOT just answer questions passively.
+Instead, you drive a structured conversation to understand the recruiter's company and needs, then make a compelling case for why Praveen is the right hire.
+
+CONVERSATION FLOW:
+Phase 1 — Discovery (2-3 questions): Ask smart questions about their company, team size, engineering challenges, and what they're hiring for. Be curious and specific.
+Phase 2 — Mapping: Once you understand their needs, connect Praveen's specific projects and skills to their exact challenges. Be concrete.
+Phase 3 — Pitch: Synthesise a personalised "why hire Praveen" argument tailored to what you learned. Keep it sharp and honest.
+
+TONE: Professional, warm, slightly confident. Not salesy. Think senior engineer talking to a peer, not a recruiter pitch.
+
+RULES:
+- Never make up facts about Praveen beyond what's provided
+- If asked about salary/availability, say that's best discussed directly with Praveen
+- Keep responses concise — 3-5 sentences max unless generating the final pitch
+- Always move the conversation forward — end with a question or insight
+`;
+
+const history = [];
+const messagesEl = document.getElementById('chat-messages');
+const inputEl    = document.getElementById('chat-input');
+const sendBtn    = document.getElementById('send-btn');
+
+function appendMsg(role, html) {
+  const div = document.createElement('div');
+  div.className = `msg ${role === 'assistant' ? 'agent' : 'user'}`;
+  const avatar = document.createElement('div');
+  avatar.className = 'msg-avatar';
+  avatar.textContent = role === 'assistant' ? 'PA' : 'You';
+  const bubble = document.createElement('div');
+  bubble.className = 'msg-bubble';
+  bubble.innerHTML = html;
+  div.appendChild(avatar);
+  div.appendChild(bubble);
+  messagesEl.appendChild(div);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+  return div;
+}
+
+function showTyping() {
+  const div = document.createElement('div');
+  div.className = 'msg agent';
+  div.id = 'typing';
+  div.innerHTML = `<div class="msg-avatar">PA</div><div class="msg-bubble"><div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div></div>`;
+  messagesEl.appendChild(div);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+}
+function removeTyping() {
+  const t = document.getElementById('typing');
+  if (t) t.remove();
+}
+
+async function sendMessage(userText) {
+  if (!userText.trim()) return;
+  appendMsg('user', userText);
+  history.push({ role: 'user', content: userText });
+  inputEl.value = '';
+  sendBtn.disabled = true;
+  showTyping();
+
+  try {
+    const res = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: PROFILE,
+        messages: history
+      })
+    });
+    const data = await res.json();
+    const reply = data.content?.map(b => b.text || '').join('') || 'Something went wrong — please try again.';
+    removeTyping();
+    appendMsg('assistant', reply.replace(/\n/g, '<br>'));
+    history.push({ role: 'assistant', content: reply });
+  } catch(e) {
+    removeTyping();
+    appendMsg('assistant', 'Hmm, I hit a snag. The server may be waking up (Render free tier sleeps) — please try again in a moment.');
+  }
+  sendBtn.disabled = false;
+}
+
+// Opening message
+appendMsg('assistant', `Hello! I'm Praveen's AI agent — and I'm going to flip this a little.<br><br>
+Instead of me just answering your questions, I'd love to understand <strong>your</strong> world first, so I can make a genuinely useful case for why Praveen might be the right person for your team.<br><br>
+Let's start here: <strong>What kind of engineering challenges is your team working on right now?</strong>`);
+
+sendBtn.addEventListener('click', () => sendMessage(inputEl.value));
+inputEl.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(inputEl.value); }
+});
+</script>
+</body>
+</html>
