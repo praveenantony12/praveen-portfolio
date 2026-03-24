@@ -37,26 +37,41 @@ body {
 
 /* ─── CUSTOM CURSOR ─────────────────────────────────────── */
 #cursor-dot {
-  width: 8px; height: 8px;
+  width: 6px; height: 6px;
   background: var(--amber);
   border-radius: 50%;
   position: fixed; top: 0; left: 0;
   pointer-events: none; z-index: 9999;
   transform: translate(-50%, -50%);
-  transition: transform 0.08s ease;
 }
 #cursor-ring {
-  width: 32px; height: 32px;
+  width: 28px; height: 28px;
   border: 1.5px solid var(--amber);
   border-radius: 50%;
   position: fixed; top: 0; left: 0;
   pointer-events: none; z-index: 9998;
   transform: translate(-50%, -50%);
-  transition: transform 0.22s ease, width 0.22s ease, height 0.22s ease, opacity 0.22s ease;
-  opacity: 0.5;
+  transition: width 0.18s ease, height 0.18s ease, opacity 0.18s ease;
+  opacity: 0.55;
 }
 body:hover #cursor-ring { opacity: 1; }
-.cursor-expand #cursor-ring { width: 56px; height: 56px; opacity: 0.3; }
+.cursor-expand #cursor-ring { width: 48px; height: 48px; opacity: 0.25; }
+/* medium screens — shrink ring */
+@media (max-width: 1024px) {
+  #cursor-dot { width: 5px; height: 5px; }
+  #cursor-ring { width: 18px; height: 18px; }
+  .cursor-expand #cursor-ring { width: 30px; height: 30px; }
+}
+/* small screens — go minimal: tiny dot only, no ring */
+@media (max-width: 768px) {
+  #cursor-dot { width: 4px; height: 4px; }
+  #cursor-ring { display: none; }
+}
+/* pure touch devices — hide everything, restore native cursor */
+@media (hover: none) and (pointer: coarse) {
+  #cursor-dot, #cursor-ring { display: none; }
+  body { cursor: auto; }
+}
 
 /* ─── NOISE OVERLAY ─────────────────────────────────────── */
 body::before {
@@ -635,96 +650,399 @@ footer {
   footer { flex-direction: column; gap: 1rem; text-align: center; }
 }
 
-/* ─── COLD START LOADER ─────────────────────────────────── */
-#cold-loader {
-  position: fixed; inset: 0; z-index: 99999;
-  background: var(--ink);
+/* ─── RESUME GENERATOR ──────────────────────────────────── */
+#resume-gen { background: var(--ink); }
+.resume-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  margin-top: 3rem;
+  align-items: start;
+}
+.resume-input-col { display: flex; flex-direction: column; gap: 1rem; }
+.resume-label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem; letter-spacing: 0.15em;
+  text-transform: uppercase; color: var(--amber);
+  margin-bottom: 0.3rem;
+}
+#jd-input {
+  width: 100%; height: 220px;
+  background: rgba(37,40,54,0.6);
+  border: 1px solid var(--line);
+  color: var(--paper);
+  font-family: var(--font-mono);
+  font-size: 0.8rem; line-height: 1.6;
+  padding: 1rem; resize: vertical; outline: none;
+  transition: border-color 0.2s;
+}
+#jd-input:focus { border-color: var(--amber); }
+#jd-input::placeholder { color: var(--muted); }
+.agent-pipeline {
+  display: flex; flex-direction: column; gap: 0;
+  margin: 0.5rem 0;
+}
+.pipeline-step {
+  display: flex; align-items: center; gap: 0.75rem;
+  padding: 0.6rem 0.9rem;
+  border: 1px solid var(--line);
+  border-bottom: none;
+  font-family: var(--font-mono); font-size: 0.75rem;
+  color: var(--muted); position: relative;
+  transition: background 0.3s, color 0.3s, border-color 0.3s;
+}
+.pipeline-step:last-child { border-bottom: 1px solid var(--line); }
+.pipeline-step.ps-active {
+  background: rgba(232,160,32,0.08);
+  border-color: rgba(232,160,32,0.4);
+  color: var(--amber);
+  z-index: 1;
+}
+.pipeline-step.ps-active + .pipeline-step { border-top-color: rgba(232,160,32,0.4); }
+.pipeline-step.ps-done {
+  background: rgba(74,222,128,0.05);
+  color: rgba(74,222,128,0.7);
+}
+.ps-icon { font-size: 0.85rem; width: 18px; text-align: center; flex-shrink: 0; }
+.ps-spinner {
+  width: 12px; height: 12px;
+  border: 1.5px solid rgba(232,160,32,0.3);
+  border-top-color: var(--amber);
+  border-radius: 50%;
+  animation: spin-ps 0.7s linear infinite;
+  flex-shrink: 0;
+}
+@keyframes spin-ps { to { transform: rotate(360deg); } }
+
+/* Resume output */
+.resume-output-col { position: relative; }
+.resume-placeholder {
+  border: 1px dashed rgba(107,112,128,0.3);
+  padding: 3rem 2rem;
+  text-align: center;
   display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  gap: 2rem; padding: 2rem;
-  transition: opacity 0.8s ease, visibility 0.8s ease;
+  align-items: center; gap: 1rem;
 }
-#cold-loader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-#cold-loader .grid-bg {
-  position: absolute; inset: 0;
-  background-image:
-    linear-gradient(var(--line) 1px, transparent 1px),
-    linear-gradient(90deg, var(--line) 1px, transparent 1px);
-  background-size: 48px 48px;
-  mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 100%);
-  animation: grid-pulse 4s ease-in-out infinite;
+.resume-placeholder-icon { font-size: 2.5rem; opacity: 0.3; }
+.resume-placeholder-text {
+  font-family: var(--font-mono); font-size: 0.78rem;
+  color: var(--muted); letter-spacing: 0.08em;
 }
-@keyframes grid-pulse { 0%,100%{opacity:0.5} 50%{opacity:1} }
-#cold-loader .loader-logo { text-align: center; position: relative; z-index: 1; }
-#cold-loader .loader-name {
-  font-family: var(--font-head);
-  font-size: clamp(2.2rem, 6vw, 3.5rem);
-  font-weight: 800; color: var(--paper);
-  letter-spacing: -0.02em; line-height: 1;
+#resume-output {
+  display: none;
+  background: #ffffff;
+  color: #1a1a2e;
+  padding: 2.5rem;
+  font-family: 'Georgia', serif;
+  font-size: 0.88rem;
+  line-height: 1.65;
+  position: relative;
 }
-#cold-loader .loader-name span { color: var(--amber); }
-#cold-loader .loader-sub {
-  font-family: var(--font-mono);
-  font-size: 0.7rem; letter-spacing: 0.2em;
-  text-transform: uppercase; color: var(--muted);
-  margin-top: 0.5rem;
+#resume-output h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.6rem; font-weight: 800;
+  color: #0b0c10; margin-bottom: 0.1rem;
+  letter-spacing: -0.01em;
 }
-.boot-seq { width: 100%; max-width: 400px; position: relative; z-index: 1; }
-.boot-line {
-  font-family: var(--font-mono);
-  font-size: 0.72rem; letter-spacing: 0.05em;
-  color: var(--muted); padding: 0.22rem 0;
-  display: flex; gap: 0.75rem; align-items: center;
-  opacity: 0; transform: translateX(-8px);
-  transition: opacity 0.4s ease, transform 0.4s ease;
+#resume-output .resume-tagline {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.72rem; letter-spacing: 0.12em;
+  text-transform: uppercase; color: #e8a020;
+  margin-bottom: 0.75rem;
 }
-.boot-line.bl-visible { opacity: 1; transform: translateX(0); }
-.boot-line .bl-icon { transition: color 0.3s; flex-shrink: 0; }
-.boot-line.bl-running .bl-icon { color: var(--amber); animation: bl-spin 0.8s linear infinite; }
-.boot-line.bl-done .bl-icon { color: #4ade80; }
-.boot-line .bl-label { flex: 1; }
-.boot-line .bl-status { font-size: 0.65rem; }
-.boot-line.bl-running .bl-status { color: var(--amber); }
-.boot-line.bl-done .bl-status { color: #4ade80; }
-@keyframes bl-spin { to { transform: rotate(360deg); } }
-.loader-progress-wrap {
-  width: 100%; max-width: 400px; height: 2px;
-  background: rgba(232,160,32,0.12);
-  position: relative; z-index: 1; border-radius: 1px;
+#resume-output .resume-links {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.72rem; color: #6b7080;
+  margin-bottom: 1.2rem;
 }
-.loader-progress-fill {
-  height: 100%; background: var(--amber);
-  border-radius: 1px; width: 0%;
-  transition: width 0.6s ease;
+#resume-output hr { border: none; border-top: 2px solid #e8a020; margin: 0.8rem 0; }
+#resume-output h2 {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.85rem; font-weight: 800;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: #0b0c10; margin: 1.2rem 0 0.5rem;
 }
-.loader-tagline {
-  font-family: var(--font-mono);
-  font-size: 0.72rem; letter-spacing: 0.08em;
-  color: rgba(107,112,128,0.7);
-  text-align: center; position: relative; z-index: 1;
-  font-style: italic; transition: opacity 0.4s;
+#resume-output p { margin-bottom: 0.5rem; color: #2a2a3e; }
+#resume-output ul { padding-left: 1.2rem; margin-bottom: 0.5rem; }
+#resume-output li { margin-bottom: 0.25rem; color: #2a2a3e; }
+#resume-output .match-badge {
+  display: inline-block;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem; letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: rgba(232,160,32,0.15);
+  color: #854f0b; border: 1px solid rgba(232,160,32,0.3);
+  padding: 0.1rem 0.5rem; margin-left: 0.4rem;
+  vertical-align: middle;
 }
+#resume-output .skill-gap {
+  background: rgba(232,160,32,0.06);
+  border-left: 3px solid #e8a020;
+  padding: 0.6rem 0.8rem; margin-top: 0.8rem;
+  font-size: 0.82rem; color: #4a3a0a;
+}
+#resume-output .skill-gap strong { color: #854f0b; }
+.resume-actions {
+  display: flex; gap: 0.75rem; margin-top: 1rem;
+  flex-wrap: wrap;
+}
+@media (max-width: 900px) {
+  .resume-layout { grid-template-columns: 1fr; }
+}
+@media print {
+  body > *:not(#resume-gen) { display: none !important; }
+  #resume-gen > *:not(#print-target) { display: none !important; }
+  #print-target { display: block !important; }
+  nav, .resume-input-col, .resume-actions,
+  .section-label, h2.section-title,
+  #resume-gen > p { display: none !important; }
+  #resume-output { padding: 0; box-shadow: none; }
+}
+
+/* ─── RESUME GENERATOR ──────────────────────────────────── */
+(function() {
+  const PRAVEEN = {
+    name: 'Praveen Antony',
+    title: 'Full-Stack AI Developer',
+    linkedin: 'linkedin.com/in/praveenantony12',
+    github: 'github.com/praveenantony12',
+    summary: '10+ years of full-stack engineering experience, now specialising in agentic AI systems — building multi-agent orchestration workflows with guardrails, security, and production-readiness at the core.',
+    skills: [
+      'Python','LangChain','LLMs','Agentic Workflows','Multi-Agent Orchestration',
+      'Node.js','TypeScript','React','Next.js','PWA',
+      'AWS','GCP','Azure','Docker','CI/CD','GitHub Actions',
+      'REST APIs','GraphQL','PostgreSQL','MongoDB',
+      'AI Guardrails','Prompt Engineering','RAG','Vector Databases'
+    ],
+    projects: [
+      {
+        name: 'Dev Agent & PR Generator',
+        desc: 'Multi-agent system (Planner, Developer, Reviewer, CI/CD) that autonomously takes a GitHub user story and generates a production-ready, mergeable pull request.',
+        tags: ['LangChain','Multi-Agent','GitHub API','CI/CD','Python']
+      },
+      {
+        name: 'Bedtime Story Architect',
+        desc: 'AI-driven PWA that generates personalised, narrated and illustrated bedtime stories for children in real time based on their spoken request.',
+        tags: ['React','LLM','TTS','Image Generation','PWA']
+      },
+      {
+        name: 'Fifty Six — Card Game AI',
+        desc: 'Classic 6-player South Indian partnership card game rebuilt as a full PWA with a complete rules engine and AI bots replicating human-like strategic gameplay.',
+        tags: ['Game AI','Rules Engine','React','PWA','Node.js']
+      }
+    ],
+    experience: [
+      { role: 'Full-Stack AI Developer', period: '2023 – Present', bullets: [
+        'Designing and building multi-agent agentic workflows with structured guardrails and security boundaries',
+        'Orchestrating LLM pipelines using LangChain with planner, executor, reviewer, and CI/CD agent roles',
+        'Building production-ready AI applications across Python backend and React/Next.js frontend'
+      ]},
+      { role: 'Senior Full-Stack Engineer', period: '2015 – 2023', bullets: [
+        '10+ years shipping production software across cloud platforms (AWS, GCP, Azure)',
+        'Led full-stack architecture for enterprise applications using Node.js, TypeScript, and React',
+        'Designed CI/CD pipelines, containerised workloads with Docker, and owned observability'
+      ]}
+    ]
+  };
+
+  const SYSTEM_PROMPT = `You are a resume tailoring agent for Praveen Antony, a Full-Stack AI Developer.
+Your job: given a job description, output a JSON object (and ONLY JSON, no markdown fences, no preamble) with this exact structure:
+
+{
+  "matchScore": <number 0-100>,
+  "matchedSkills": [<array of strings — skills from Praveen's profile that match the JD>],
+  "tailoredSummary": "<2-3 sentence summary rewritten to mirror the JD's language and priorities>",
+  "tailoredBullets": {
+    "devAgent": [<1-2 bullet strings highlighting aspects relevant to this JD>],
+    "storyArchitect": [<1 bullet string>],
+    "fiftySize": [<1 bullet string>]
+  },
+  "relevantSkills": [<top 10-12 skills to highlight for this role>],
+  "gapAnalysis": "<1-2 sentences on areas to discuss or grow into — frame positively as 'areas to explore'>",
+  "roleTitle": "<suggested role title to use on resume for this application>"
+}
+
+Praveen's profile:
+Skills: ${PRAVEEN.skills.join(', ')}
+Projects: Dev Agent & PR Generator (multi-agent LangChain pipeline), Bedtime Story Architect (AI PWA with TTS+image gen), Fifty Six Card Game (game AI + rules engine PWA)
+Experience: 10+ years full-stack, specialising in agentic AI, Python, Node.js, TypeScript, React, AWS/GCP/Azure`;
+
+  function setPipelineStep(idx, state) {
+    const steps = document.querySelectorAll('.pipeline-step');
+    steps.forEach((s, i) => {
+      s.classList.remove('ps-active', 'ps-done');
+      const iconEl = s.querySelector('.ps-icon');
+      const spinEl = s.querySelector('.ps-spinner');
+      if (spinEl) spinEl.remove();
+      iconEl.style.display = '';
+      if (i < idx) {
+        s.classList.add('ps-done');
+        iconEl.textContent = '✓';
+      } else if (i === idx && state === 'running') {
+        s.classList.add('ps-active');
+        iconEl.style.display = 'none';
+        const spin = document.createElement('div');
+        spin.className = 'ps-spinner';
+        s.insertBefore(spin, iconEl.nextSibling);
+      } else {
+        iconEl.textContent = '◈';
+      }
+    });
+  }
+
+  function resetPipeline() {
+    document.querySelectorAll('.pipeline-step').forEach(s => {
+      s.classList.remove('ps-active', 'ps-done');
+      const iconEl = s.querySelector('.ps-icon');
+      const spinEl = s.querySelector('.ps-spinner');
+      if (spinEl) spinEl.remove();
+      if (iconEl) { iconEl.style.display = ''; iconEl.textContent = '◈'; }
+    });
+  }
+
+  function buildResumeHTML(data) {
+    const matchColor = data.matchScore >= 75 ? '#4ade80' : data.matchScore >= 50 ? '#e8a020' : '#f87171';
+    const matchBlock = data._isDefault ? '' : `
+    <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.8rem;">
+      <span style="font-family:'DM Mono',monospace;font-size:0.68rem;text-transform:uppercase;letter-spacing:0.12em;color:#6b7080;">JD Match</span>
+      <span style="font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:${matchColor}">${data.matchScore}%</span>
+    </div>`;
+    return `
+    <h1>${PRAVEEN.name}</h1>
+    <div class="resume-tagline">${data.roleTitle || PRAVEEN.title}</div>
+    <div class="resume-links">${PRAVEEN.linkedin} &nbsp;·&nbsp; ${PRAVEEN.github}</div>
+    <hr/>
+    ${matchBlock}
+
+    <h2>Summary</h2>
+    <p>${data.tailoredSummary}</p>
+
+    <h2>Relevant Skills</h2>
+    <p>${(data.relevantSkills||[]).join(' · ')}</p>
+
+    <h2>Experience</h2>
+    ${PRAVEEN.experience.map(e => `
+      <p style="margin-bottom:0.2rem;"><strong>${e.role}</strong> <span style="color:#6b7080;font-size:0.82rem;">${e.period}</span></p>
+      <ul>${e.bullets.map(b => `<li>${b}</li>`).join('')}</ul>
+    `).join('')}
+
+    <h2>Projects</h2>
+    <p style="margin-bottom:0.3rem;"><strong>Dev Agent & PR Generator</strong> <span class="match-badge">featured</span></p>
+    <ul>${(data.tailoredBullets?.devAgent||[]).map(b=>`<li>${b}</li>`).join('')}</ul>
+
+    <p style="margin-bottom:0.3rem;"><strong>Bedtime Story Architect</strong></p>
+    <ul>${(data.tailoredBullets?.storyArchitect||[]).map(b=>`<li>${b}</li>`).join('')}</ul>
+
+    <p style="margin-bottom:0.3rem;"><strong>Fifty Six — Card Game AI</strong></p>
+    <ul>${(data.tailoredBullets?.fiftySize||[]).map(b=>`<li>${b}</li>`).join('')}</ul>
+
+    <h2>Matched Skills</h2>
+    <p>${(data.matchedSkills||[]).join(' · ')}</p>
+
+    ${data.gapAnalysis ? `
+    <div class="skill-gap">
+      <strong>Areas to explore in conversation:</strong> ${data.gapAnalysis}
+    </div>` : ''}
+    `;
+  }
+
+  async function generate() {
+    const jd = document.getElementById('jd-input').value.trim();
+    if (!jd) {
+      document.getElementById('jd-input').focus();
+      document.getElementById('jd-input').style.borderColor = '#f87171';
+      setTimeout(() => document.getElementById('jd-input').style.borderColor = '', 1500);
+      return;
+    }
+
+    const btn = document.getElementById('gen-resume-btn');
+    btn.disabled = true;
+    btn.textContent = 'Generating…';
+    document.getElementById('resume-placeholder').style.display = 'flex';
+    document.getElementById('resume-output').style.display = 'none';
+    document.getElementById('resume-actions').style.display = 'none';
+    resetPipeline();
+
+    // Simulate staged pipeline (steps 0–3) while API call runs in background
+    const delays = [0, 800, 1600, 2400];
+    delays.forEach((d, i) => setTimeout(() => setPipelineStep(i, 'running'), d));
+
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          system: SYSTEM_PROMPT,
+          messages: [{ role: 'user', content: 'Job description:\n\n' + jd }]
+        })
+      });
+
+      const raw = await res.json();
+      const text = raw.content?.[0]?.text || '';
+
+      // Strip markdown fences if model added them anyway
+      const clean = text.replace(/```json|```/gi, '').trim();
+      const data = JSON.parse(clean);
+
+      // Mark all steps done
+      setPipelineStep(4, 'done');
+
+      // Render resume
+      document.getElementById('resume-placeholder').style.display = 'none';
+      const out = document.getElementById('resume-output');
+      out.innerHTML = buildResumeHTML(data);
+      out.style.display = 'block';
+      document.getElementById('resume-actions').style.display = 'flex';
+
+    } catch(err) {
+      console.error('Resume generation error:', err);
+      resetPipeline();
+      // Show graceful fallback — load default resume instead of error
+      document.getElementById('resume-placeholder').style.display = 'none';
+      const out = document.getElementById('resume-output');
+      out.innerHTML = buildResumeHTML({
+        matchScore: 0,
+        matchedSkills: ['Python','Node.js','TypeScript','React','LLMs','AWS'],
+        tailoredSummary: PRAVEEN.summary,
+        tailoredBullets: {
+          devAgent: ['Built a complete multi-agent pipeline (Planner, Developer, Reviewer, CI/CD) that takes a GitHub user story and autonomously generates a production-ready pull request.'],
+          storyArchitect: ['Designed and shipped a real-time AI PWA with TTS and image generation, deployed to production for daily use.'],
+          fiftySize: ['Architected a full rules engine and human-like AI bots for a complex 6-player card game, available as a PWA.']
+        },
+        relevantSkills: PRAVEEN.skills.slice(0, 12),
+        gapAnalysis: '',
+        roleTitle: PRAVEEN.title,
+        _isDefault: true
+      });
+      out.style.display = 'block';
+      document.getElementById('resume-actions').style.display = 'flex';
+    }
+
+    btn.disabled = false;
+    btn.innerHTML = '⟶ &nbsp;Generate Tailored Resume';
+  }
+
+  document.getElementById('gen-resume-btn').addEventListener('click', generate);
+
+  document.getElementById('pdf-btn').addEventListener('click', () => {
+    window.print();
+  });
+
+  document.getElementById('regen-btn').addEventListener('click', () => {
+    document.getElementById('resume-output').style.display = 'none';
+    document.getElementById('resume-placeholder').style.display = 'flex';
+    document.getElementById('resume-placeholder').innerHTML =
+      '<div class="resume-placeholder-icon">📄</div>' +
+      '<div class="resume-placeholder-text">Your tailored resume will appear here</div>' +
+      '<div class="resume-placeholder-text" style="opacity:0.5;font-size:0.65rem;">Paste a JD and click Generate</div>';
+    document.getElementById('resume-actions').style.display = 'none';
+    resetPipeline();
+  });
+})();
+
 </style>
 </head>
 <body>
-
-<!-- COLD START LOADER -->
-<div id="cold-loader">
-  <div class="grid-bg"></div>
-  <div class="loader-logo">
-    <div class="loader-name">Praveen <span>Antony</span></div>
-    <div class="loader-sub">Full-Stack AI Developer &middot; Initialising</div>
-  </div>
-  <div class="boot-seq" id="boot-seq">
-    <div class="boot-line" id="bl-0"><span class="bl-icon">&#9678;</span><span class="bl-label">Waking up server instance</span><span class="bl-status">&mdash;</span></div>
-    <div class="boot-line" id="bl-1"><span class="bl-icon">&#9678;</span><span class="bl-label">Loading AI agent context</span><span class="bl-status">&mdash;</span></div>
-    <div class="boot-line" id="bl-2"><span class="bl-icon">&#9678;</span><span class="bl-label">Mounting project manifests</span><span class="bl-status">&mdash;</span></div>
-    <div class="boot-line" id="bl-3"><span class="bl-icon">&#9678;</span><span class="bl-label">Configuring guardrails</span><span class="bl-status">&mdash;</span></div>
-    <div class="boot-line" id="bl-4"><span class="bl-icon">&#9678;</span><span class="bl-label">Recruiter mode: ready</span><span class="bl-status">&mdash;</span></div>
-  </div>
-  <div class="loader-progress-wrap"><div class="loader-progress-fill" id="loader-bar"></div></div>
-  <div class="loader-tagline" id="loader-tagline">Cold starts happen. Great engineers ship anyway.</div>
-</div>
 
 <div id="cursor-dot"></div>
 <div id="cursor-ring"></div>
@@ -735,6 +1053,7 @@ footer {
   <ul class="nav-links">
     <li><a href="#about">About</a></li>
     <li><a href="#projects">Projects</a></li>
+    <li><a href="#resume-gen">Resume AI</a></li>
     <li><a href="#agent">Talk to my AI</a></li>
     <li><a href="https://github.com/praveenantony12" target="_blank">GitHub</a></li>
   </ul>
@@ -937,6 +1256,67 @@ footer {
   </div>
 </section>
 
+<!-- RESUME GENERATOR -->
+<section id="resume-gen">
+  <div class="section-label">AI Tool</div>
+  <h2 class="section-title fade-up">Resume Generator</h2>
+  <p class="fade-up" style="color:rgba(245,240,232,0.5);font-style:italic;margin-top:0.25rem;font-size:0.95rem;">
+    Paste a job description. My AI agent tailors a resume, scores skill match, and flags gaps — in seconds.
+  </p>
+
+  <div class="resume-layout">
+
+    <!-- Input col -->
+    <div class="resume-input-col fade-up">
+      <div>
+        <div class="resume-label">Job Description</div>
+        <textarea id="jd-input" placeholder="Paste the job description here...&#10;&#10;e.g. We're looking for a Senior AI Engineer to build multi-agent pipelines, work with LLMs in production, and own the full stack from Python backend to React frontend..."></textarea>
+      </div>
+
+      <div>
+        <div class="resume-label" style="margin-bottom:0.6rem;">Agent Pipeline</div>
+        <div class="agent-pipeline">
+          <div class="pipeline-step" id="ps-0">
+            <span class="ps-icon">◈</span>
+            <span>Skill Extractor — reads JD, extracts required skills</span>
+          </div>
+          <div class="pipeline-step" id="ps-1">
+            <span class="ps-icon">◈</span>
+            <span>Match Scorer — maps skills to Praveen's profile</span>
+          </div>
+          <div class="pipeline-step" id="ps-2">
+            <span class="ps-icon">◈</span>
+            <span>Resume Composer — writes tailored content</span>
+          </div>
+          <div class="pipeline-step" id="ps-3">
+            <span class="ps-icon">◈</span>
+            <span>Gap Analyst — surfaces areas to discuss</span>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-primary" id="gen-resume-btn" style="align-self:flex-start">
+        ⟶ &nbsp;Generate Tailored Resume
+      </button>
+    </div>
+
+    <!-- Output col -->
+    <div class="resume-output-col fade-up" style="transition-delay:0.15s" id="print-target">
+      <div class="resume-placeholder" id="resume-placeholder">
+        <div class="resume-placeholder-icon">📄</div>
+        <div class="resume-placeholder-text">Your tailored resume will appear here</div>
+        <div class="resume-placeholder-text" style="opacity:0.5;font-size:0.65rem;">Paste a JD and click Generate</div>
+      </div>
+      <div id="resume-output"></div>
+      <div class="resume-actions" id="resume-actions" style="display:none;">
+        <button class="btn-primary" id="pdf-btn">⬇ &nbsp;Download PDF</button>
+        <button class="btn-ghost" id="regen-btn">↺ &nbsp;Regenerate</button>
+      </div>
+    </div>
+
+  </div>
+</section>
+
 <!-- AGENT CHAT -->
 <section id="agent">
   <div class="agent-bg-text">ASK</div>
@@ -1012,8 +1392,8 @@ const ring = document.getElementById('cursor-ring');
 let mx = 0, my = 0, rx = 0, ry = 0;
 document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
 (function animCursor() {
-  rx += (mx - rx) * 0.12;
-  ry += (my - ry) * 0.12;
+  rx += (mx - rx) * 0.28;
+  ry += (my - ry) * 0.28;
   dot.style.left  = mx + 'px';
   dot.style.top   = my + 'px';
   ring.style.left = rx + 'px';
@@ -1140,90 +1520,400 @@ inputEl.addEventListener('keydown', e => {
 });
 </script>
 
+<style>
+/* ─── RESUME GENERATOR ──────────────────────────────────── */
+#resume-gen { background: var(--ink); }
+.resume-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  margin-top: 3rem;
+  align-items: start;
+}
+.resume-input-col { display: flex; flex-direction: column; gap: 1rem; }
+.resume-label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem; letter-spacing: 0.15em;
+  text-transform: uppercase; color: var(--amber);
+  margin-bottom: 0.3rem;
+}
+#jd-input {
+  width: 100%; height: 220px;
+  background: rgba(37,40,54,0.6);
+  border: 1px solid var(--line);
+  color: var(--paper);
+  font-family: var(--font-mono);
+  font-size: 0.8rem; line-height: 1.6;
+  padding: 1rem; resize: vertical; outline: none;
+  transition: border-color 0.2s;
+}
+#jd-input:focus { border-color: var(--amber); }
+#jd-input::placeholder { color: var(--muted); }
+.agent-pipeline {
+  display: flex; flex-direction: column; gap: 0;
+  margin: 0.5rem 0;
+}
+.pipeline-step {
+  display: flex; align-items: center; gap: 0.75rem;
+  padding: 0.6rem 0.9rem;
+  border: 1px solid var(--line);
+  border-bottom: none;
+  font-family: var(--font-mono); font-size: 0.75rem;
+  color: var(--muted); position: relative;
+  transition: background 0.3s, color 0.3s, border-color 0.3s;
+}
+.pipeline-step:last-child { border-bottom: 1px solid var(--line); }
+.pipeline-step.ps-active {
+  background: rgba(232,160,32,0.08);
+  border-color: rgba(232,160,32,0.4);
+  color: var(--amber);
+  z-index: 1;
+}
+.pipeline-step.ps-active + .pipeline-step { border-top-color: rgba(232,160,32,0.4); }
+.pipeline-step.ps-done {
+  background: rgba(74,222,128,0.05);
+  color: rgba(74,222,128,0.7);
+}
+.ps-icon { font-size: 0.85rem; width: 18px; text-align: center; flex-shrink: 0; }
+.ps-spinner {
+  width: 12px; height: 12px;
+  border: 1.5px solid rgba(232,160,32,0.3);
+  border-top-color: var(--amber);
+  border-radius: 50%;
+  animation: spin-ps 0.7s linear infinite;
+  flex-shrink: 0;
+}
+@keyframes spin-ps { to { transform: rotate(360deg); } }
+
+/* Resume output */
+.resume-output-col { position: relative; }
+.resume-placeholder {
+  border: 1px dashed rgba(107,112,128,0.3);
+  padding: 3rem 2rem;
+  text-align: center;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 1rem;
+}
+.resume-placeholder-icon { font-size: 2.5rem; opacity: 0.3; }
+.resume-placeholder-text {
+  font-family: var(--font-mono); font-size: 0.78rem;
+  color: var(--muted); letter-spacing: 0.08em;
+}
+#resume-output {
+  display: none;
+  background: #ffffff;
+  color: #1a1a2e;
+  padding: 2.5rem;
+  font-family: 'Georgia', serif;
+  font-size: 0.88rem;
+  line-height: 1.65;
+  position: relative;
+}
+#resume-output h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.6rem; font-weight: 800;
+  color: #0b0c10; margin-bottom: 0.1rem;
+  letter-spacing: -0.01em;
+}
+#resume-output .resume-tagline {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.72rem; letter-spacing: 0.12em;
+  text-transform: uppercase; color: #e8a020;
+  margin-bottom: 0.75rem;
+}
+#resume-output .resume-links {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.72rem; color: #6b7080;
+  margin-bottom: 1.2rem;
+}
+#resume-output hr { border: none; border-top: 2px solid #e8a020; margin: 0.8rem 0; }
+#resume-output h2 {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.85rem; font-weight: 800;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: #0b0c10; margin: 1.2rem 0 0.5rem;
+}
+#resume-output p { margin-bottom: 0.5rem; color: #2a2a3e; }
+#resume-output ul { padding-left: 1.2rem; margin-bottom: 0.5rem; }
+#resume-output li { margin-bottom: 0.25rem; color: #2a2a3e; }
+#resume-output .match-badge {
+  display: inline-block;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem; letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: rgba(232,160,32,0.15);
+  color: #854f0b; border: 1px solid rgba(232,160,32,0.3);
+  padding: 0.1rem 0.5rem; margin-left: 0.4rem;
+  vertical-align: middle;
+}
+#resume-output .skill-gap {
+  background: rgba(232,160,32,0.06);
+  border-left: 3px solid #e8a020;
+  padding: 0.6rem 0.8rem; margin-top: 0.8rem;
+  font-size: 0.82rem; color: #4a3a0a;
+}
+#resume-output .skill-gap strong { color: #854f0b; }
+.resume-actions {
+  display: flex; gap: 0.75rem; margin-top: 1rem;
+  flex-wrap: wrap;
+}
+@media (max-width: 900px) {
+  .resume-layout { grid-template-columns: 1fr; }
+}
+@media print {
+  body > *:not(#resume-gen) { display: none !important; }
+  #resume-gen > *:not(#print-target) { display: none !important; }
+  #print-target { display: block !important; }
+  nav, .resume-input-col, .resume-actions,
+  .section-label, h2.section-title,
+  #resume-gen > p { display: none !important; }
+  #resume-output { padding: 0; box-shadow: none; }
+}
+
+/* ─── RESUME GENERATOR ──────────────────────────────────── */
+</style>
+
 <script>
-/* ─── COLD START LOADER ───────────────────────────────────── */
 (function() {
-  const TAGLINES = [
-    'Cold starts happen. Great engineers ship anyway.',
-    'Multi-agent orchestration loading…',
-    'Guardrails: engaged. Workflows: armed.',
-    'Every agent needs a warm-up.',
-    'Worth the wait — promise.'
-  ];
-  const BOOT_LINES = [
-    { id: 'bl-0', startMs: 300,  doneMs: 1100 },
-    { id: 'bl-1', startMs: 1300, doneMs: 2200 },
-    { id: 'bl-2', startMs: 2400, doneMs: 3200 },
-    { id: 'bl-3', startMs: 3400, doneMs: 4300 },
-    { id: 'bl-4', startMs: 4500, doneMs: 5400 },
-  ];
-  const PROGRESS_STEPS = [10, 30, 52, 72, 92];
+  const PRAVEEN = {
+    name: 'Praveen Antony',
+    title: 'Full-Stack AI Developer',
+    linkedin: 'linkedin.com/in/praveenantony12',
+    github: 'github.com/praveenantony12',
+    summary: '10+ years of full-stack engineering experience, now specialising in agentic AI systems — building multi-agent orchestration workflows with guardrails, security, and production-readiness at the core.',
+    skills: [
+      'Python','LangChain','LLMs','Agentic Workflows','Multi-Agent Orchestration',
+      'Node.js','TypeScript','React','Next.js','PWA',
+      'AWS','GCP','Azure','Docker','CI/CD','GitHub Actions',
+      'REST APIs','GraphQL','PostgreSQL','MongoDB',
+      'AI Guardrails','Prompt Engineering','RAG','Vector Databases'
+    ],
+    projects: [
+      {
+        name: 'Dev Agent & PR Generator',
+        desc: 'Multi-agent system (Planner, Developer, Reviewer, CI/CD) that autonomously takes a GitHub user story and generates a production-ready, mergeable pull request.',
+        tags: ['LangChain','Multi-Agent','GitHub API','CI/CD','Python']
+      },
+      {
+        name: 'Bedtime Story Architect',
+        desc: 'AI-driven PWA that generates personalised, narrated and illustrated bedtime stories for children in real time based on their spoken request.',
+        tags: ['React','LLM','TTS','Image Generation','PWA']
+      },
+      {
+        name: 'Fifty Six — Card Game AI',
+        desc: 'Classic 6-player South Indian partnership card game rebuilt as a full PWA with a complete rules engine and AI bots replicating human-like strategic gameplay.',
+        tags: ['Game AI','Rules Engine','React','PWA','Node.js']
+      }
+    ],
+    experience: [
+      { role: 'Full-Stack AI Developer', period: '2023 – Present', bullets: [
+        'Designing and building multi-agent agentic workflows with structured guardrails and security boundaries',
+        'Orchestrating LLM pipelines using LangChain with planner, executor, reviewer, and CI/CD agent roles',
+        'Building production-ready AI applications across Python backend and React/Next.js frontend'
+      ]},
+      { role: 'Senior Full-Stack Engineer', period: '2015 – 2023', bullets: [
+        '10+ years shipping production software across cloud platforms (AWS, GCP, Azure)',
+        'Led full-stack architecture for enterprise applications using Node.js, TypeScript, and React',
+        'Designed CI/CD pipelines, containerised workloads with Docker, and owned observability'
+      ]}
+    ]
+  };
 
-  const loader   = document.getElementById('cold-loader');
-  const bar      = document.getElementById('loader-bar');
-  const tagEl    = document.getElementById('loader-tagline');
-  let tagIdx     = 0;
-  let pollTimer  = null;
-  let dismissed  = false;
+  const SYSTEM_PROMPT = `You are a resume tailoring agent for Praveen Antony, a Full-Stack AI Developer.
+Your job: given a job description, output a JSON object (and ONLY JSON, no markdown fences, no preamble) with this exact structure:
 
-  function setLine(id, state) {
-    const el = document.getElementById(id);
-    if (!el) return;
-    el.classList.add('bl-visible');
-    const icon   = el.querySelector('.bl-icon');
-    const status = el.querySelector('.bl-status');
-    if (state === 'running') {
-      el.classList.add('bl-running');
-      icon.textContent   = '↻';
-      status.textContent = 'running…';
-    } else {
-      el.classList.remove('bl-running');
-      el.classList.add('bl-done');
-      icon.textContent   = '✓';
-      status.textContent = 'done';
+{
+  "matchScore": <number 0-100>,
+  "matchedSkills": [<array of strings — skills from Praveen's profile that match the JD>],
+  "tailoredSummary": "<2-3 sentence summary rewritten to mirror the JD's language and priorities>",
+  "tailoredBullets": {
+    "devAgent": [<1-2 bullet strings highlighting aspects relevant to this JD>],
+    "storyArchitect": [<1 bullet string>],
+    "fiftySize": [<1 bullet string>]
+  },
+  "relevantSkills": [<top 10-12 skills to highlight for this role>],
+  "gapAnalysis": "<1-2 sentences on areas to discuss or grow into — frame positively as 'areas to explore'>",
+  "roleTitle": "<suggested role title to use on resume for this application>"
+}
+
+Praveen's profile:
+Skills: ${PRAVEEN.skills.join(', ')}
+Projects: Dev Agent & PR Generator (multi-agent LangChain pipeline), Bedtime Story Architect (AI PWA with TTS+image gen), Fifty Six Card Game (game AI + rules engine PWA)
+Experience: 10+ years full-stack, specialising in agentic AI, Python, Node.js, TypeScript, React, AWS/GCP/Azure`;
+
+  function setPipelineStep(idx, state) {
+    const steps = document.querySelectorAll('.pipeline-step');
+    steps.forEach((s, i) => {
+      s.classList.remove('ps-active', 'ps-done');
+      const iconEl = s.querySelector('.ps-icon');
+      const spinEl = s.querySelector('.ps-spinner');
+      if (spinEl) spinEl.remove();
+      iconEl.style.display = '';
+      if (i < idx) {
+        s.classList.add('ps-done');
+        iconEl.textContent = '✓';
+      } else if (i === idx && state === 'running') {
+        s.classList.add('ps-active');
+        iconEl.style.display = 'none';
+        const spin = document.createElement('div');
+        spin.className = 'ps-spinner';
+        s.insertBefore(spin, iconEl.nextSibling);
+      } else {
+        iconEl.textContent = '◈';
+      }
+    });
+  }
+
+  function resetPipeline() {
+    document.querySelectorAll('.pipeline-step').forEach(s => {
+      s.classList.remove('ps-active', 'ps-done');
+      const iconEl = s.querySelector('.ps-icon');
+      const spinEl = s.querySelector('.ps-spinner');
+      if (spinEl) spinEl.remove();
+      if (iconEl) { iconEl.style.display = ''; iconEl.textContent = '◈'; }
+    });
+  }
+
+  function buildResumeHTML(data) {
+    const matchColor = data.matchScore >= 75 ? '#4ade80' : data.matchScore >= 50 ? '#e8a020' : '#f87171';
+    const matchBlock = data._isDefault ? '' : `
+    <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.8rem;">
+      <span style="font-family:'DM Mono',monospace;font-size:0.68rem;text-transform:uppercase;letter-spacing:0.12em;color:#6b7080;">JD Match</span>
+      <span style="font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:${matchColor}">${data.matchScore}%</span>
+    </div>`;
+    return `
+    <h1>${PRAVEEN.name}</h1>
+    <div class="resume-tagline">${data.roleTitle || PRAVEEN.title}</div>
+    <div class="resume-links">${PRAVEEN.linkedin} &nbsp;·&nbsp; ${PRAVEEN.github}</div>
+    <hr/>
+    ${matchBlock}
+
+    <h2>Summary</h2>
+    <p>${data.tailoredSummary}</p>
+
+    <h2>Relevant Skills</h2>
+    <p>${(data.relevantSkills||[]).join(' · ')}</p>
+
+    <h2>Experience</h2>
+    ${PRAVEEN.experience.map(e => `
+      <p style="margin-bottom:0.2rem;"><strong>${e.role}</strong> <span style="color:#6b7080;font-size:0.82rem;">${e.period}</span></p>
+      <ul>${e.bullets.map(b => `<li>${b}</li>`).join('')}</ul>
+    `).join('')}
+
+    <h2>Projects</h2>
+    <p style="margin-bottom:0.3rem;"><strong>Dev Agent & PR Generator</strong> <span class="match-badge">featured</span></p>
+    <ul>${(data.tailoredBullets?.devAgent||[]).map(b=>`<li>${b}</li>`).join('')}</ul>
+
+    <p style="margin-bottom:0.3rem;"><strong>Bedtime Story Architect</strong></p>
+    <ul>${(data.tailoredBullets?.storyArchitect||[]).map(b=>`<li>${b}</li>`).join('')}</ul>
+
+    <p style="margin-bottom:0.3rem;"><strong>Fifty Six — Card Game AI</strong></p>
+    <ul>${(data.tailoredBullets?.fiftySize||[]).map(b=>`<li>${b}</li>`).join('')}</ul>
+
+    <h2>Matched Skills</h2>
+    <p>${(data.matchedSkills||[]).join(' · ')}</p>
+
+    ${data.gapAnalysis ? `
+    <div class="skill-gap">
+      <strong>Areas to explore in conversation:</strong> ${data.gapAnalysis}
+    </div>` : ''}
+    `;
+  }
+
+  async function generate() {
+    const jd = document.getElementById('jd-input').value.trim();
+    if (!jd) {
+      document.getElementById('jd-input').focus();
+      document.getElementById('jd-input').style.borderColor = '#f87171';
+      setTimeout(() => document.getElementById('jd-input').style.borderColor = '', 1500);
+      return;
     }
+
+    const btn = document.getElementById('gen-resume-btn');
+    btn.disabled = true;
+    btn.textContent = 'Generating…';
+    document.getElementById('resume-placeholder').style.display = 'flex';
+    document.getElementById('resume-output').style.display = 'none';
+    document.getElementById('resume-actions').style.display = 'none';
+    resetPipeline();
+
+    // Simulate staged pipeline (steps 0–3) while API call runs in background
+    const delays = [0, 800, 1600, 2400];
+    delays.forEach((d, i) => setTimeout(() => setPipelineStep(i, 'running'), d));
+
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          system: SYSTEM_PROMPT,
+          messages: [{ role: 'user', content: 'Job description:\n\n' + jd }]
+        })
+      });
+
+      const raw = await res.json();
+      const text = raw.content?.[0]?.text || '';
+
+      // Strip markdown fences if model added them anyway
+      const clean = text.replace(/```json|```/gi, '').trim();
+      const data = JSON.parse(clean);
+
+      // Mark all steps done
+      setPipelineStep(4, 'done');
+
+      // Render resume
+      document.getElementById('resume-placeholder').style.display = 'none';
+      const out = document.getElementById('resume-output');
+      out.innerHTML = buildResumeHTML(data);
+      out.style.display = 'block';
+      document.getElementById('resume-actions').style.display = 'flex';
+
+    } catch(err) {
+      console.error('Resume generation error:', err);
+      resetPipeline();
+      // Show graceful fallback — load default resume instead of error
+      document.getElementById('resume-placeholder').style.display = 'none';
+      const out = document.getElementById('resume-output');
+      out.innerHTML = buildResumeHTML({
+        matchScore: 0,
+        matchedSkills: ['Python','Node.js','TypeScript','React','LLMs','AWS'],
+        tailoredSummary: PRAVEEN.summary,
+        tailoredBullets: {
+          devAgent: ['Built a complete multi-agent pipeline (Planner, Developer, Reviewer, CI/CD) that takes a GitHub user story and autonomously generates a production-ready pull request.'],
+          storyArchitect: ['Designed and shipped a real-time AI PWA with TTS and image generation, deployed to production for daily use.'],
+          fiftySize: ['Architected a full rules engine and human-like AI bots for a complex 6-player card game, available as a PWA.']
+        },
+        relevantSkills: PRAVEEN.skills.slice(0, 12),
+        gapAnalysis: '',
+        roleTitle: PRAVEEN.title,
+        _isDefault: true
+      });
+      out.style.display = 'block';
+      document.getElementById('resume-actions').style.display = 'flex';
+    }
+
+    btn.disabled = false;
+    btn.innerHTML = '⟶ &nbsp;Generate Tailored Resume';
   }
 
-  function cycleTags() {
-    tagIdx = (tagIdx + 1) % TAGLINES.length;
-    tagEl.style.opacity = '0';
-    setTimeout(() => {
-      tagEl.textContent  = TAGLINES[tagIdx];
-      tagEl.style.opacity = '0.7';
-    }, 350);
-  }
+  document.getElementById('gen-resume-btn').addEventListener('click', generate);
 
-  function dismiss() {
-    if (dismissed) return;
-    dismissed = true;
-    if (pollTimer) clearInterval(pollTimer);
-    bar.style.width = '100%';
-    // Make sure last line shows done
-    BOOT_LINES.forEach(l => setLine(l.id, 'done'));
-    setTimeout(() => { loader.classList.add('hidden'); }, 700);
-  }
-
-  // Kick off boot animation
-  BOOT_LINES.forEach((line, i) => {
-    setTimeout(() => { setLine(line.id, 'running'); bar.style.width = PROGRESS_STEPS[i] * 0.5 + '%'; }, line.startMs);
-    setTimeout(() => { setLine(line.id, 'done');    bar.style.width = PROGRESS_STEPS[i] + '%'; },      line.doneMs);
+  document.getElementById('pdf-btn').addEventListener('click', () => {
+    window.print();
   });
 
-  // Cycle taglines every 2.5s
-  const tagTimer = setInterval(cycleTags, 2500);
-
-  // Poll /health every 2s — dismiss as soon as server responds
-  function poll() {
-    fetch('/health', { cache: 'no-store' })
-      .then(r => { if (r.ok) { clearInterval(tagTimer); dismiss(); } })
-      .catch(() => {}); // server still asleep — keep polling
-  }
-  // First poll after 1s, then every 2s
-  setTimeout(() => { poll(); pollTimer = setInterval(poll, 2000); }, 1000);
-
-  // Safety net: always dismiss after 35s even if health never responds
-  setTimeout(() => { clearInterval(tagTimer); dismiss(); }, 35000);
+  document.getElementById('regen-btn').addEventListener('click', () => {
+    document.getElementById('resume-output').style.display = 'none';
+    document.getElementById('resume-placeholder').style.display = 'flex';
+    document.getElementById('resume-placeholder').innerHTML =
+      '<div class="resume-placeholder-icon">📄</div>' +
+      '<div class="resume-placeholder-text">Your tailored resume will appear here</div>' +
+      '<div class="resume-placeholder-text" style="opacity:0.5;font-size:0.65rem;">Paste a JD and click Generate</div>';
+    document.getElementById('resume-actions').style.display = 'none';
+    resetPipeline();
+  });
 })();
+
 </script>
 
 </body>
