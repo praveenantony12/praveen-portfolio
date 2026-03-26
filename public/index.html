@@ -408,6 +408,91 @@ h2.section-title {
 .project-link .arrow { transition: transform 0.2s; }
 .project-link:hover .arrow { transform: translateX(3px); }
 
+/* ─── PROJECT ACTION LINKS ─────────────────────────────────── */
+.project-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+.project-demo {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: rgba(232,160,32,0.08);
+  color: var(--amber);
+  border: 1px solid rgba(232,160,32,0.25);
+  padding: 0.4rem 0.9rem;
+  text-decoration: none;
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+.project-demo::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(232,160,32,0.2), transparent);
+  transition: left 0.6s ease;
+}
+.project-demo::after {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 0; height: 0;
+  background: radial-gradient(circle, rgba(232,160,32,0.15) 0%, transparent 70%);
+  transform: translate(-50%, -50%);
+  transition: width 0.4s ease, height 0.4s ease;
+  border-radius: 50%;
+}
+.project-demo:hover::before { left: 100%; }
+.project-demo:hover::after {
+  width: 120%; height: 120%;
+}
+.project-demo:hover {
+  background: rgba(232,160,32,0.15);
+  border-color: var(--amber);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(232,160,32,0.3);
+}
+.project-demo .demo-icon {
+  font-size: 0.85rem;
+  transition: transform 0.3s ease, filter 0.3s ease;
+  animation: pulse-icon 2s ease-in-out infinite;
+}
+.project-demo:hover .demo-icon { 
+  transform: scale(1.2) rotate(5deg);
+  filter: brightness(1.2);
+}
+@keyframes pulse-icon {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(0.95); }
+}
+
+.project-github {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: transparent;
+  color: var(--amber);
+  border: 1px solid var(--line);
+  padding: 0.4rem 0.9rem;
+  text-decoration: none;
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  transition: all 0.25s ease;
+}
+.project-github:hover {
+  border-color: var(--amber);
+  background: rgba(232,160,32,0.08);
+  transform: translateY(-1px);
+}
+.project-github .arrow { transition: transform 0.2s; }
+.project-github:hover .arrow { transform: translateX(3px); }
+
 /* ─── AGENT CHAT ────────────────────────────────────────── */
 #agent {
   background: var(--slate);
@@ -1169,9 +1254,14 @@ Experience: 10+ years full-stack, specialising in agentic AI, Python, Node.js, T
         <span class="ptag">CI/CD</span>
         <span class="ptag">Planner · Dev · Reviewer</span>
       </div>
-      <a href="https://github.com/praveenantony12" target="_blank" class="project-link">
-        View on GitHub <span class="arrow">→</span>
-      </a>
+      <div class="project-actions">
+        <a href="https://github.com/praveenantony12" target="_blank" class="project-github">
+          View Code <span class="arrow">→</span>
+        </a>
+        <a href="#" class="project-demo" title="Demo coming soon" target="_blank">
+          <span class="demo-icon">🚀</span> Launch App
+        </a>
+      </div>
     </div>
 
     <!-- Bedtime Story -->
@@ -1189,9 +1279,14 @@ Experience: 10+ years full-stack, specialising in agentic AI, Python, Node.js, T
         <span class="ptag">PWA</span>
         <span class="ptag">LLM</span>
       </div>
-      <a href="https://github.com/praveenantony12" target="_blank" class="project-link">
-        View on GitHub <span class="arrow">→</span>
-      </a>
+      <div class="project-actions">
+        <a href="https://github.com/praveenantony12/bedtime-story-architect/" target="_blank" class="project-github">
+          View Code <span class="arrow">→</span>
+        </a>
+        <a href="https://bedtime-story-architect.onrender.com/" class="project-demo" title="Demo coming soon" target="_blank">
+          <span class="demo-icon">🚀</span> Launch App
+        </a>
+      </div>
     </div>
 
     <!-- 56 Card Game -->
@@ -1209,21 +1304,38 @@ Experience: 10+ years full-stack, specialising in agentic AI, Python, Node.js, T
         <span class="ptag">PWA</span>
         <span class="ptag">Multiplayer</span>
       </div>
-      <a href="https://github.com/praveenantony12" target="_blank" class="project-link">
-        View on GitHub <span class="arrow">→</span>
-      </a>
+      <div class="project-actions">
+        <a href="https://github.com/praveenantony12" target="_blank" class="project-github">
+          View Code <span class="arrow">→</span>
+        </a>
+        <a href="#" class="project-demo" title="Demo coming soon" target="_blank">
+          <span class="demo-icon">🚀</span> Launch App
+        </a>
+      </div>
     </div>
 
-    <!-- Placeholder 4 -->
-    <div class="project-card placeholder fade-up" style="transition-delay:0.3s">
-      <div class="project-num">04 / Coming Soon</div>
-      <span class="project-icon">⚗️</span>
-      <div class="project-title">Next Agent Project</div>
+    <!-- Soccer Bot Team Selector -->
+    <div class="project-card fade-up" style="transition-delay:0.3s">
+      <div class="project-num">04 / Agentic Systems · Automation</div>
+      <span class="project-icon">⚽</span>
+      <div class="project-title">Soccer Bot Team Selector</div>
       <p class="project-desc">
-        Leveling up agentic complexity. Follow the GitHub to see what's being built next.
+        An intelligent automation system that orchestrates team selection workflows with persistent backend scheduling, skill-based balancing algorithms, and state management — overcoming cold start challenges and ephemeral storage limitations for reliable, continuous operation.
       </p>
       <div class="project-tags">
-        <span class="ptag">In Progress</span>
+        <span class="ptag">Node.js</span>
+        <span class="ptag">Angular</span>
+        <span class="ptag">State Management</span>
+        <span class="ptag">Cron Jobs</span>
+        <span class="ptag">Cold Start Solutions</span>
+      </div>
+      <div class="project-actions">
+        <a href="https://github.com/praveenantony12/soccer-bot-team-selector" target="_blank" class="project-github">
+          View Code <span class="arrow">→</span>
+        </a>
+        <a href="https://soccer-bot-team-selector.onrender.com" target="_blank" class="project-demo" title="Demo available on request">
+          <span class="demo-icon">⚽</span> Launch App
+        </a>
       </div>
     </div>
 
