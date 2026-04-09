@@ -19,35 +19,37 @@
 ```bash
 export GEMINI_API_KEY=your-key-here
 npm run dev
-# Visit: http://localhost:8787
+# Visit: http://localhost:3000
 # Test chat, then Ctrl+C to stop
 ```
 
-### 2️⃣ Deploy Worker to Cloudflare
+### 2️⃣ Push to GitHub
 ```bash
-npm run deploy
-# Worker will be at: https://praveen-portfolio-api.workers.dev
+git add .
+git commit -m "Cloudflare Pages Functions migration"
+git push origin main
 ```
 
-### 3️⃣ Add API Secret (via Dashboard)
-1. Go to https://dash.cloudflare.com
-2. **Workers & Pages** → **praveen-portfolio-api** → **Settings** → **Secrets**
-3. Click **Add Secret**
-   - Name: `GEMINI_API_KEY`
-   - Value: (paste your key)
-4. Click **Save** ← Worker redeploys automatically
+### 3️⃣ Deploy Pages (Static Files + Functions)
+1. Go to **https://dash.cloudflare.com** → **Workers & Pages**
+2. Click **Create Application** → **Pages** → **Connect to Git**
+3. Authorize GitHub and select your `praveen-portfolio` repo
+4. Configure build settings:
+   - **Framework:** None
+   - **Build command:** (leave blank)
+   - **Build output directory:** `public`
+5. Click **Save and Deploy**
+   - Your Pages URL: **`https://praveenantony.pages.dev`** ✅
 
-### 4️⃣ Deploy Pages (Static Files)
-1. Go to https://dash.cloudflare.com → **Workers & Pages** → **Create Application** → **Pages** → **Connect to Git**
-2. Select `praveen-portfolio` repo
-3. Build settings:
-   - Output directory: `public/`
-   - (leave build command blank)
-4. Click **Save and Deploy**
-   - Your Pages URL: `https://praveen-portfolio.pages.dev`
+### 4️⃣ Add Your API Key (Environment Variable)
+1. In Cloudflare dashboard → **Pages** → **praveen-portfolio** → **Settings** → **Environment Variables**
+2. Click **Add**
+   - Variable name: `GEMINI_API_KEY`
+   - Value: (paste your Gemini API key)
+3. Click **Deploy** — Pages redeploys automatically
 
 ### 5️⃣ Test Everything
-Visit your Pages URL and test the chat. Done! 🎉
+Visit **https://praveenantony.pages.dev** and test the chat. Done! 🎉
 
 ---
 
@@ -55,9 +57,9 @@ Visit your Pages URL and test the chat. Done! 🎉
 
 | Component | URL |
 |-----------|-----|
-| **Portfolio (Pages)** | `https://praveen-portfolio.pages.dev` |
-| **Worker API** | `https://praveen-portfolio-api.workers.dev` |
-| **Health Check** | `https://praveen-portfolio-api.workers.dev/health` |
+| **Portfolio (Pages)** | `https://praveenantony.pages.dev` |
+| **API Route** | `/api/chat` (auto-routed via Functions) |
+| **Health Check** | `https://praveenantony.pages.dev/api/health` |
 
 ---
 
@@ -65,9 +67,9 @@ Visit your Pages URL and test the chat. Done! 🎉
 
 | File | Purpose |
 |------|---------|
-| `src/worker.js` | Worker code (deploy with `npm run deploy`) |
-| `wrangler.toml` | Worker config |
-| `public/` | Static files (deploy to Pages) |
+| `functions/api/chat.js` | Pages Function (handles /api/chat) |
+| `public/` | Static files (index.html, CSS, JS) |
+| `wrangler.toml` | Cloudflare Pages config |
 | `MIGRATION_GUIDE.md` | Detailed step-by-step guide |
 
 ---
@@ -76,10 +78,10 @@ Visit your Pages URL and test the chat. Done! 🎉
 
 | Issue | Solution |
 |-------|----------|
-| "GEMINI_API_KEY not configured" | Add secret in Dashboard → Worker → Settings → Secrets |
-| Rate limit hit (429) | Wait 60 seconds, or edit `RATE_LIMIT` in `src/worker.js` |
-| CORS errors | Worker adds headers automatically — not your issue |
-| Pages shows old version | Clear cache: Pages → Deployments → check latest |
+| 404 on `/` or static files | Check Pages Settings → Build output = `public/` |
+| "GEMINI_API_KEY not configured" | Add env var in Pages → Settings → Environment Variables |
+| /api/chat returns 404 | Check that `functions/api/chat.js` exists and Pages auto-detected it |
+| Functions not executing | Verify Pages dashboard shows "Functions: 1 detected" |
 
 ---
 
