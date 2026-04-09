@@ -4,6 +4,8 @@
  * Keeps API key secure and applies rate limiting
  */
 
+import { getAssetFromKV } from '@cloudflare/kv-asset-handler';
+
 // ── In-memory rate limiting (per IP, per deployments) ─────────────────
 // NOTE: In-memory state resets on Worker redeploy. For persistent rate limits,
 // use Durable Objects (more complex, but recommended for production)
@@ -50,10 +52,45 @@ export default {
       return handleChatRequest(request, env);
     }
 
-    // ── 404 for other routes (Pages should handle static files) ──
+    // ── Static files: Serve from public/ directory ──────────────────
+    try {
+      return await getAssetFromKV(
+        { request, waitUntil: ctx.waitUntil },
+        {
+          ASSET_NAMESPACE: env.ASSETS,
+          ASSET_MANIFEST: env.__STATIC_CONTENT_MANIFEST || {},
+        }
+      );
+    } catch (err) {
+      // For SPA routing: serve index.html on 404 for non-API routes
+      if (request.method === 'GET' && !url.pathname.startsWith('/api/')) {
+        try {
+          return await getAssetFromKV(
+            {
+              request: new Request(
+                new URL('/', request.url).toString(),
+                request
+              ),
+              waitUntil: ctx.waitUntil,
+            },
+            {
+              ASSET_NAMESPACE: env.ASSETS,
+              ASSET_MANIFEST: env.__STATIC_CONTENT_MANIFEST || {},
+            }
+          );
+        } catch (e) {
+          // Still not found, return 404
+        }
+      }
+    }
+
+    // ── Default 404 ──────────────────────────────────────────────
     return new Response('Not Found', { status: 404 });
   },
 };
+
+
+
 
 /**
  * Handle POST /api/chat request

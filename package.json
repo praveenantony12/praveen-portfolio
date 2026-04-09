@@ -5,14 +5,14 @@
   "main": "src/worker.js",
   "type": "module",
   "scripts": {
-    "dev": "wrangler dev",
-    "deploy": "wrangler deploy",
-    "deploy:pages": "wrangler pages deploy public/",
-    "pages:build": "echo 'Pages deployment configured in Cloudflare Dashboard'",
-    "pages:dev": "wrangler pages dev public/"
+    "dev": "node local-server.js",
+    "dev:pages": "wrangler pages dev public/",
+    "deploy": "wrangler pages deploy public/",
+    "deploy:worker": "wrangler deploy src/worker.js"
   },
   "devDependencies": {
-    "wrangler": "^3.80.0"
+    "@cloudflare/kv-asset-handler": "^0.4.2",
+    "wrangler": "^4.81.0"
   },
   "engines": {
     "node": ">=18.0.0"
