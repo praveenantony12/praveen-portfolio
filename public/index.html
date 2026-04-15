@@ -4,6 +4,11 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Praveen Antony — Full-Stack AI Developer</title>
+<link rel="icon" type="image/x-icon" href="favicon_io/favicon.ico" />
+<link rel="icon" type="image/png" sizes="16x16" href="favicon_io/favicon-16x16.png" />
+<link rel="icon" type="image/png" sizes="32x32" href="favicon_io/favicon-32x32.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="favicon_io/apple-touch-icon.png" />
+<link rel="manifest" href="favicon_io/site.webmanifest" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:ital,wght@0,300;0,400;1,300&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;1,9..144,300&display=swap" rel="stylesheet" />
@@ -900,69 +905,140 @@ footer {
 (function() {
   const PRAVEEN = {
     name: 'Praveen Antony',
-    title: 'Full-Stack AI Developer',
+    title: 'Principal Software Engineer | Technical Lead | AI Systems Architect',
+    location: 'Apex, NC',
+    phone: '469-231-8419',
     linkedin: 'linkedin.com/in/praveenantony12',
     github: 'github.com/praveenantony12',
-    summary: '17+ years of full-stack engineering experience, now specialising in agentic AI systems — building multi-agent orchestration workflows with guardrails, security, and production-readiness at the core.',
+    portfolio: 'praveenantony.pages.dev',
+    summary: 'Principal Software Engineer with 17+ years architecting enterprise-scale platforms across full-stack engineering, distributed systems, cloud-native architectures, and AI-driven applications. Deep expertise in Java, Spring Boot, microservices, Angular, AWS, Kubernetes, and secure API engineering. Recently expanded into production-grade agentic AI systems, multi-agent orchestration, and enterprise RAG solutions with emphasis on guardrails, observability, and reliability engineering.',
     skills: [
-      'Python','LangChain','LLMs','Agentic Workflows','Multi-Agent Orchestration',
-      'Node.js','TypeScript','React','Next.js','PWA',
-      'AWS','GCP','Azure','Docker','CI/CD','GitHub Actions',
-      'REST APIs','GraphQL','PostgreSQL','MongoDB',
-      'AI Guardrails','Prompt Engineering','RAG','Vector Databases'
+      // AI & Agentic
+      'Python','LangGraph','LangChain','LangSmith','Multi-Agent Orchestration','RAG','Vector Stores','FAISS',
+      'Hugging Face','OpenAI Agents SDK','CrewAI','AutoGen','MCP','FastAPI','Prompt Security','Guardrails',
+      'OpenTelemetry','OTEL Observability','LLMs','Agentic Workflows',
+      // Backend & Cloud
+      'Java','Spring Boot','Microservices','REST APIs','Node.js','AWS','AWS Certified Solutions Architect',
+      'Docker','Kubernetes','EKS','PostgreSQL','CI/CD','Jenkins','GitLab',
+      // Frontend
+      'Angular','React','React Native','TypeScript','JavaScript','HTML5','CSS3','Tailwind CSS',
+      // DevOps & Security
+      'OAuth2','OIDC','JWT','Datadog','Splunk','Sentry','Encryption Controls'
+    ],
+    experience: [
+      {
+        company: 'Fidelity Investments',
+        role: 'Principal Software Engineer / Technical Lead',
+        period: 'June 2023 – Present',
+        location: 'Raleigh, NC',
+        bullets: [
+          'Lead technical direction for a team of 8 engineers, driving architecture decisions, sprint execution, code reviews, and delivery governance',
+          'Serve as Technical Lead for mission-critical market data platforms supporting enterprise financial workflows',
+          'Architect cloud-native full-stack applications using Java, Spring Boot, Angular, AWS, and Kubernetes (EKS)',
+          'Lead modernization initiatives migrating legacy monoliths into secure containerized microservices architectures',
+          'Establish enterprise API engineering standards for security, observability, versioning, and rate limiting',
+          'Implement OAuth2, OIDC, JWT, encryption controls, and secure coding best practices',
+          'Build and optimize CI/CD pipelines using Jenkins and GitLab',
+          'Mentor engineers across architecture, production support, and engineering excellence'
+        ]
+      },
+      {
+        company: 'EBSCO Information Services',
+        role: 'Senior Software Engineer II',
+        period: 'March 2017 – June 2023',
+        bullets: [
+          'Designed and operated services supporting global enterprise web-based products',
+          'Led technical research and proof-of-concept initiatives for modernization and platform evolution',
+          'Improved software quality through quality gates and deployment pipeline controls',
+          'Delivered scalable full-stack solutions in collaboration with product and engineering teams'
+        ]
+      },
+      {
+        company: 'Randstad Technologies',
+        role: 'Senior Software Developer / UI Developer',
+        period: 'September 2014 – March 2017',
+        clients: 'Fidelity Investments, Ally Financial',
+        bullets: [
+          'Served on the Technical Review Board reviewing solution designs and technical artifacts',
+          'Developed enterprise-grade J2EE and Node.js applications',
+          'Built scalable frontend solutions using Angular, JavaScript, HTML5, and CSS3'
+        ]
+      },
+      {
+        company: 'Kforce Inc',
+        role: 'Senior UI Developer',
+        period: 'October 2013 – September 2014',
+        client: 'Sparta Systems',
+        bullets: [
+          'Developed responsive cross-browser enterprise applications using Backbone.js and jQuery',
+          'Contributed to UI architecture strategy and component evolution'
+        ]
+      },
+      {
+        company: 'Infosys Ltd',
+        role: 'Technology Analyst',
+        period: 'September 2008 – October 2013',
+        bullets: [
+          'Built enterprise systems using REST services, Java, XML/JSON, HTTP, SSL',
+          'Delivered scalable portal and integration solutions for enterprise clients',
+          'Developed reusable platform components and custom enterprise themes'
+        ]
+      }
     ],
     projects: [
       {
-        name: 'Dev Agent & PR Generator',
-        desc: 'Multi-agent system (Planner, Developer, Reviewer, CI/CD) that autonomously takes a GitHub user story and generates a production-ready, mergeable pull request.',
-        tags: ['LangChain','Multi-Agent','GitHub API','CI/CD','Python']
-      },
-      {
-        name: 'Bedtime Story Architect',
-        desc: 'AI-driven PWA that generates personalised, narrated and illustrated bedtime stories for children in real time based on their spoken request.',
-        tags: ['React','LLM','TTS','Image Generation','PWA']
-      },
-      {
-        name: 'Fifty Six — Card Game AI',
-        desc: 'Classic 6-player South Indian partnership card game rebuilt as a full PWA with a complete rules engine and AI bots replicating human-like strategic gameplay.',
-        tags: ['Game AI','Rules Engine','React','PWA','Node.js']
-      },
-      {
-        name: 'DealScout AI — Deal Intelligence Platform',
-        desc: 'An agentic PWA that autonomously tracks product prices across retailers.',
-        tags: ['Multi-Agent','Edge Computing','PWA','Real-Time Alerts','LLM']
-      },
-      {
-        name: 'FlowPilot — Workflow Automation Platform',
-        desc: 'Enterprise MCP-powered incident response workflow agent \u2014 LangGraph state machine, FastAPI backend, React frontend, Angular SSE dashboard, PostgreSQL persistence, Docker full-stack deployment.',
-        tags: ['Python', 'LangGraph', 'FastAPI', 'MCP', 'Angular', 'PostgreSQL', 'Docker', 'SSE']
-      },
-      {
         name: 'LeapDev AI Platform',
-        desc: 'Autonomous developer agent platform - takes a Jira story end-to-end through planning, coding, review, CI/CD, and PR creation. All code run in an isolated Docker sandbox with prompt-injection guards, token budgets and circuit breakers.',
-        tags: ['Python', 'LangGraph', 'Multi-Agent', 'FastAPI', 'Jira API', 'Prompt Injection Guard', 'OTEL']
+        tagline: 'Autonomous Developer Agent Platform',
+        desc: 'End-to-end system taking Jira stories through task planning, code generation, multi-agent review, CI/CD execution, and PR creation with isolated Docker sandbox, token-budget governance, circuit breakers, and prompt-injection sanitization.',
+        tags: ['Python','LangGraph','Multi-Agent','FastAPI','Jira API','Docker','Prompt Injection Guard','OTEL']
       },
       {
         name: 'ConfluxAI',
-        desc: 'Enterprise RAG-powered Confluence search copilot - natural-language questions answered with inline citations, ambuiguity clarification flow, feedback loop and analytics dashboard.',
-        tags: ['Python', 'LangGraph', 'RAG', 'FastAPI', 'FAISS', 'Angular', 'LLM', 'Docker']
+        tagline: 'Enterprise RAG Search Copilot',
+        desc: 'Natural-language Confluence query interface with LangGraph multi-turn clarification, FAISS vector storage, Angular answer panel with source-card citations, feedback loop, and analytics dashboard.',
+        tags: ['Python','LangGraph','RAG','FastAPI','FAISS','Angular','LLM','Docker']
+      },
+      {
+        name: 'FlowPilot',
+        tagline: 'Enterprise MCP-Powered Incident-Response Workflow Agent',
+        desc: 'Automates full incident-response lifecycle across ServiceNow, Jira, Microsoft Teams with LangGraph state machine, human-in-the-loop approval gates, real-time Angular dashboard via SSE, PostgreSQL persistence, Docker stack.',
+        tags: ['Python','LangGraph','FastAPI','MCP','Angular','PostgreSQL','Docker','SSE','ServiceNow']
+      },
+      {
+        name: 'Dev Agent & PR Generator',
+        tagline: 'Autonomous GitHub PR Generation System',
+        desc: 'Multi-agent system (Planner, Developer, Reviewer, CI/CD) consuming GitHub user stories to autonomously generate mergeable pull requests with code review and pipeline validation.',
+        tags: ['LangChain','Multi-Agent','GitHub API','CI/CD','Python']
+      },
+      {
+        name: 'DealScoutAI',
+        tagline: 'AI-Powered Deal Intelligence Platform',
+        desc: 'Automatically extracts, categorizes, and analyzes sales deals from emails, calendars, and CRM data using NLP and classification pipelines.',
+        tags: ['NLP','Classification','Python','LLM','Data Extraction']
+      },
+      {
+        name: 'Bedtime Story Architect',
+        tagline: 'Multimodal AI Story Generation PWA',
+        desc: 'AI-driven progressive web app generating personalized narrated and illustrated bedtime stories in real-time using multimodal LLM outputs with text-to-speech and image generation.',
+        tags: ['React','LLM','TTS','Image Generation','PWA','Multimodal AI']
+      },
+      {
+        name: 'Fifty Six Card Game',
+        tagline: 'AI Bot Gameplay Simulation Engine',
+        desc: 'Classic 6-player South Indian card game rebuilt as online PWA with full rules engine and AI opponents using decision trees and probabilistic modeling.',
+        tags: ['Game AI','Rules Engine','React','PWA','Node.js','Decision Trees']
       }
     ],
-    experience: [
-      { role: 'Full-Stack AI Developer', period: '2023 – Present', bullets: [
-        'Designing and building multi-agent agentic workflows with structured guardrails and security boundaries',
-        'Orchestrating LLM pipelines using LangChain with planner, executor, reviewer, and CI/CD agent roles',
-        'Building production-ready AI applications across Python backend and React/Next.js frontend'
-      ]},
-      { role: 'Senior Full-Stack Engineer', period: '2015 – 2023', bullets: [
-        '17+ years shipping production software across cloud platforms (AWS, GCP, Azure)',
-        'Led full-stack architecture for enterprise applications using Node.js, TypeScript, and React',
-        'Designed CI/CD pipelines, containerised workloads with Docker, and owned observability'
-      ]}
-    ]
+    education: [
+      { degree: 'Bachelor of Technology', field: 'Computer Science and Engineering' }
+    ],
+    certifications: [
+      'AWS Certified Solutions Architect – Associate',
+      'Scaled Agile Framework (SAFe) Certified'
+    ],
   };
 
-  const SYSTEM_PROMPT = `You are a resume tailoring agent for Praveen Antony, a Full-Stack AI Developer.
+  const SYSTEM_PROMPT = `You are a resume tailoring agent for Praveen Antony, a Principal Software Engineer and AI Systems Architect.
 Your job: given a job description, output a JSON object (and ONLY JSON, no markdown fences, no preamble) with this exact structure:
 
 {
@@ -970,23 +1046,49 @@ Your job: given a job description, output a JSON object (and ONLY JSON, no markd
   "matchedSkills": [<array of strings — skills from Praveen's profile that match the JD>],
   "tailoredSummary": "<2-3 sentence summary rewritten to mirror the JD's language and priorities>",
   "tailoredBullets": {
-    "devAgent": [<1-2 bullet strings highlighting aspects relevant to this JD>],
-    "storyArchitect": [<1 bullet string>],
-    "fiftySix": [<1 bullet string>],
-    "dealScout": [<1 bullet string>],
-    "flowPilot": [<1 bullet string>],
-    "leapDev": [<1 bullet string>],
-    "confluxAI": [<1 bullet string>]
+    "leapDev": [<1-2 bullets>],
+    "confluxAI": [<1-2 bullets>],
+    "flowPilot": [<1-2 bullets>],
+    "devAgent": [<1 bullet>],
+    "dealScout": [<1 bullet>],
+    "storyArchitect": [<1 bullet>],
+    "fiftySix": [<1 bullet>]
   },
-  "relevantSkills": [<top 10-12 skills to highlight for this role>],
-  "gapAnalysis": "<1-2 sentences on areas to discuss or grow into — frame positively as 'areas to explore'>",
+  "experienceHighlights": [<3-4 bullets from Fidelity/EBSCO highlighting relevant achievements>],
+  "relevantSkills": [<top 12-15 skills to highlight for this role>],
+  "gapAnalysis": "<1-2 sentences on areas to discuss or grow into — frame positively>",
   "roleTitle": "<suggested role title to use on resume for this application>"
 }
 
-Praveen's profile:
-Skills: ${PRAVEEN.skills.join(', ')}
-Projects: Dev Agent & PR Generator (multi-agent LangChain pipeline), Bedtime Story Architect (AI PWA with TTS+image gen), Fifty Six Card Game (game AI + rules engine PWA)
-Experience: 17+ years full-stack, specialising in agentic AI, Python, Node.js, TypeScript, React, AWS/GCP/Azure`;
+PRAVEEN'S COMPLETE PROFILE:
+
+Title: ${PRAVEEN.title}
+Location: ${PRAVEEN.location} | Phone: ${PRAVEEN.phone}
+
+Summary: ${PRAVEEN.summary}
+
+All Skills (${PRAVEEN.skills.length} total): ${PRAVEEN.skills.join(', ')}
+
+Experience:
+${PRAVEEN.experience.map(e => `- ${e.company}: ${e.role} (${e.period})${e.clients ? ' [Clients: '+e.clients+']' : ''}${e.client ? ' [Client: '+e.client+']' : ''}
+  ${e.bullets.join('\n  ')}`).join('\n\n')}
+
+Projects:
+${PRAVEEN.projects.map(p => `- ${p.name} — ${p.tagline}
+  ${p.desc}
+  Tags: ${p.tags.join(', ')}`).join('\n\n')}
+
+Education: ${PRAVEEN.education.map(e => e.degree + ' in ' + e.field).join(', ')}
+
+Certifications: ${PRAVEEN.certifications.join(', ')}
+
+Tailoring Instructions:
+1. MatchScore: Calculate based on skill overlap and role alignment (be realistic, 75-95 for good fits)
+2. TailoredSummary: Rewrite to mirror JD keywords while preserving truth
+3. ExperienceHighlights: Pick 3-4 most relevant bullets from Fidelity/EBSCO based on JD
+4. RelevantSkills: Top 12-15 skills that match the JD, ordered by relevance
+5. GapAnalysis: Frame any gaps as "areas to explore" positively
+6. RoleTitle: Suggest appropriate title based on JD (e.g., "Principal AI Engineer", "Staff Software Engineer", "AI Systems Architect")`;
 
   function setPipelineStep(idx, state) {
     const steps = document.querySelectorAll('.pipeline-step');
@@ -1192,6 +1294,7 @@ Experience: 17+ years full-stack, specialising in agentic AI, Python, Node.js, T
     <li><a href="#projects">Projects</a></li>
     <li><a href="#resume-gen">Resume AI</a></li>
     <li><a href="#agent">Talk to my AI</a></li>
+    <li><a href="Praveen-Antony-FullStack-AI-Developer.pdf" target="_blank" download>Resume</a></li>
     <li><a href="https://github.com/praveenantony12" target="_blank">GitHub</a></li>
   </ul>
 </nav>
