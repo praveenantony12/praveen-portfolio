@@ -493,6 +493,18 @@ h2.section-title {
 .project-github .arrow { transition: transform 0.2s; }
 .project-github:hover .arrow { transform: translateX(3px); }
 
+/* --- PRIVATE / ENTERPRISE PROJECTS --- */
+.project-private  {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border: 0.3rem 0.8rem;
+  display: inline-flex; align-items: center; gap: 0.35rem;
+  margin-top: 0.75rem;
+}
+
 /* ─── AGENT CHAT ────────────────────────────────────────── */
 #agent {
   background: var(--slate);
@@ -891,7 +903,7 @@ footer {
     title: 'Full-Stack AI Developer',
     linkedin: 'linkedin.com/in/praveenantony12',
     github: 'github.com/praveenantony12',
-    summary: '10+ years of full-stack engineering experience, now specialising in agentic AI systems — building multi-agent orchestration workflows with guardrails, security, and production-readiness at the core.',
+    summary: '17+ years of full-stack engineering experience, now specialising in agentic AI systems — building multi-agent orchestration workflows with guardrails, security, and production-readiness at the core.',
     skills: [
       'Python','LangChain','LLMs','Agentic Workflows','Multi-Agent Orchestration',
       'Node.js','TypeScript','React','Next.js','PWA',
@@ -914,6 +926,26 @@ footer {
         name: 'Fifty Six — Card Game AI',
         desc: 'Classic 6-player South Indian partnership card game rebuilt as a full PWA with a complete rules engine and AI bots replicating human-like strategic gameplay.',
         tags: ['Game AI','Rules Engine','React','PWA','Node.js']
+      },
+      {
+        name: 'DealScout AI — Deal Intelligence Platform',
+        desc: 'An agentic PWA that autonomously tracks product prices across retailers.',
+        tags: ['Multi-Agent','Edge Computing','PWA','Real-Time Alerts','LLM']
+      },
+      {
+        name: 'FlowPilot — Workflow Automation Platform',
+        desc: 'Enterprise MCP-powered incident response workflow agent \u2014 LangGraph state machine, FastAPI backend, React frontend, Angular SSE dashboard, PostgreSQL persistence, Docker full-stack deployment.',
+        tags: ['Python', 'LangGraph', 'FastAPI', 'MCP', 'Angular', 'PostgreSQL', 'Docker', 'SSE']
+      },
+      {
+        name: 'LeapDev AI Platform',
+        desc: 'Autonomous developer agent platform - takes a Jira story end-to-end through planning, coding, review, CI/CD, and PR creation. All code run in an isolated Docker sandbox with prompt-injection guards, token budgets and circuit breakers.',
+        tags: ['Python', 'LangGraph', 'Multi-Agent', 'FastAPI', 'Jira API', 'Prompt Injection Guard', 'OTEL']
+      },
+      {
+        name: 'ConfluxAI',
+        desc: 'Enterprise RAG-powered Confluence search copilot - natural-language questions answered with inline citations, ambuiguity clarification flow, feedback loop and analytics dashboard.',
+        tags: ['Python', 'LangGraph', 'RAG', 'FastAPI', 'FAISS', 'Angular', 'LLM', 'Docker']
       }
     ],
     experience: [
@@ -923,7 +955,7 @@ footer {
         'Building production-ready AI applications across Python backend and React/Next.js frontend'
       ]},
       { role: 'Senior Full-Stack Engineer', period: '2015 – 2023', bullets: [
-        '10+ years shipping production software across cloud platforms (AWS, GCP, Azure)',
+        '17+ years shipping production software across cloud platforms (AWS, GCP, Azure)',
         'Led full-stack architecture for enterprise applications using Node.js, TypeScript, and React',
         'Designed CI/CD pipelines, containerised workloads with Docker, and owned observability'
       ]}
@@ -940,7 +972,11 @@ Your job: given a job description, output a JSON object (and ONLY JSON, no markd
   "tailoredBullets": {
     "devAgent": [<1-2 bullet strings highlighting aspects relevant to this JD>],
     "storyArchitect": [<1 bullet string>],
-    "fiftySize": [<1 bullet string>]
+    "fiftySix": [<1 bullet string>],
+    "dealScout": [<1 bullet string>],
+    "flowPilot": [<1 bullet string>],
+    "leapDev": [<1 bullet string>],
+    "confluxAI": [<1 bullet string>]
   },
   "relevantSkills": [<top 10-12 skills to highlight for this role>],
   "gapAnalysis": "<1-2 sentences on areas to discuss or grow into — frame positively as 'areas to explore'>",
@@ -950,7 +986,7 @@ Your job: given a job description, output a JSON object (and ONLY JSON, no markd
 Praveen's profile:
 Skills: ${PRAVEEN.skills.join(', ')}
 Projects: Dev Agent & PR Generator (multi-agent LangChain pipeline), Bedtime Story Architect (AI PWA with TTS+image gen), Fifty Six Card Game (game AI + rules engine PWA)
-Experience: 10+ years full-stack, specialising in agentic AI, Python, Node.js, TypeScript, React, AWS/GCP/Azure`;
+Experience: 17+ years full-stack, specialising in agentic AI, Python, Node.js, TypeScript, React, AWS/GCP/Azure`;
 
   function setPipelineStep(idx, state) {
     const steps = document.querySelectorAll('.pipeline-step');
@@ -1019,7 +1055,19 @@ Experience: 10+ years full-stack, specialising in agentic AI, Python, Node.js, T
     <ul>${(data.tailoredBullets?.storyArchitect||[]).map(b=>`<li>${b}</li>`).join('')}</ul>
 
     <p style="margin-bottom:0.3rem;"><strong>Fifty Six — Card Game AI</strong></p>
-    <ul>${(data.tailoredBullets?.fiftySize||[]).map(b=>`<li>${b}</li>`).join('')}</ul>
+    <ul>${(data.tailoredBullets?.fiftySix||[]).map(b=>`<li>${b}</li>`).join('')}</ul>
+
+    <p style="margin-bottom:0.3rem;"><strong>Deal Scout — Real Estate Agent</strong></p>
+    <ul>${(data.tailoredBullets?.dealScout||[]).map(b=>`<li>${b}</li>`).join('')}</ul>
+
+    <p style="margin-bottom:0.3rem;"><strong>Flow Pilot — Workflow Automation</strong></p>
+    <ul>${(data.tailoredBullets?.flowPilot||[]).map(b=>`<li>${b}</li>`).join('')}</ul>
+
+    <p style="margin-bottom:0.3rem;"><strong>Leap Dev — AI-Powered Development</strong></p>
+    <ul>${(data.tailoredBullets?.leapDev||[]).map(b=>`<li>${b}</li>`).join('')}</ul>
+
+    <p style="margin-bottom:0.3rem;"><strong>Conflux AI — Multi-Agent System</strong></p>
+    <ul>${(data.tailoredBullets?.confluxAI||[]).map(b=>`<li>${b}</li>`).join('')}</ul>
 
     <h2>Matched Skills</h2>
     <p>${(data.matchedSkills||[]).join(' · ')}</p>
@@ -1092,7 +1140,11 @@ Experience: 10+ years full-stack, specialising in agentic AI, Python, Node.js, T
         tailoredBullets: {
           devAgent: ['Built a complete multi-agent pipeline (Planner, Developer, Reviewer, CI/CD) that takes a GitHub user story and autonomously generates a production-ready pull request.'],
           storyArchitect: ['Designed and shipped a real-time AI PWA with TTS and image generation, deployed to production for daily use.'],
-          fiftySize: ['Architected a full rules engine and human-like AI bots for a complex 6-player card game, available as a PWA.']
+          fiftySix: ['Architected a full rules engine and human-like AI bots for a complex 6-player card game, available as a PWA.'],
+          dealScout: ['Built a real-time AI agent that helps real agents find and qualify deals, automating the entire process from lead capture to follow-up.'],
+          flowPilot: ['Built an enterprise-grade MCP-powered workflow orchestration platform with LangGraph that helps businesses automate their workflows, reducing manual work and increasing efficiency.'],
+          leapDev: ['Architected an autonomous developer agent platform that takes a Jira story end-to-end \u2014 from task planning through code generation, multi-agent review, CI/CD, and PR creation \u2014 with all code executing inside an isolated Docker sandbox with prompt injection guards.'],
+          confluxAI: ['Built an enterprise RAG-powered Confluence search copilot \u2014 natural-language questions answered with inline citations from a FAISS vector store, with LangGraph-driven ambuigity clarification, Angular UI, feedback loop, and analytics dashboard.']
         },
         relevantSkills: PRAVEEN.skills.slice(0, 12),
         gapAnalysis: '',
@@ -1158,7 +1210,7 @@ Experience: 10+ years full-stack, specialising in agentic AI, Python, Node.js, T
     <p class="hero-bio">
       I build <strong>agentic AI systems</strong> — orchestrating multi-agent workflows with
       <em>guardrails, security, and intentional design</em>.
-      10+ years turning complex problems into elegant software.
+      17+ years turning complex problems into elegant software.
     </p>
     <div class="hero-ctas">
       <a href="#agent" class="btn-primary">
@@ -1173,7 +1225,7 @@ Experience: 10+ years full-stack, specialising in agentic AI, Python, Node.js, T
   <div class="hero-right">
     <div class="hero-stat-card fade-up" style="transition-delay:0.15s">
       <div class="stat-label">Experience</div>
-      <div class="stat-value">10+</div>
+      <div class="stat-value">17+</div>
       <div class="stat-sub">years shipping production software</div>
     </div>
     <div class="hero-stat-card fade-up" style="transition-delay:0.3s">
@@ -1197,7 +1249,7 @@ Experience: 10+ years full-stack, specialising in agentic AI, Python, Node.js, T
   <div class="about-grid">
     <div class="about-text fade-up">
       <p>
-        With <strong>10+ years of full-stack engineering</strong> under the belt, I'm now channeling that depth into the frontier of AI — specifically, <em>building agentic systems that actually work in production</em>.
+        With <strong>17+ years of full-stack engineering</strong> under the belt, I'm now channeling that depth into the frontier of AI — specifically, <em>building agentic systems that actually work in production</em>.
       </p>
       <p>
         I'm not just calling APIs. I'm architecting <strong>controlled, multi-agent workflows</strong> with proper guardrails, security boundaries, and feedback loops — the kind of systems that can be handed off to a real engineering team.
@@ -1339,30 +1391,93 @@ Experience: 10+ years full-stack, specialising in agentic AI, Python, Node.js, T
       </div>
     </div>
 
-    <!-- Placeholder 5 -->
-    <div class="project-card placeholder fade-up" style="transition-delay:0.4s">
-      <div class="project-num">05 / Coming Soon</div>
-      <span class="project-icon">🧠</span>
-      <div class="project-title">TBD — Agentic Workflow</div>
+    <!-- DealScout AI -->
+    <div class="project-card fade-up" style="transition-delay:0.4s">
+      <div class="project-num">05 / Multi-Agent · Edge · PWA</div>
+      <span class="project-icon">🎯</span>
+      <div class="project-title">DealScout AI — Deal Intelligence Platform</div>
       <p class="project-desc">
-        Every project goes a notch higher. Watch this space.
+        An agentic PWA that autonomously tracks product prices across retailers using deterministic-first multi-agent intelligence — reducing LLM costs while delivering proactive deal alerts when prices hit target thresholds.
       </p>
       <div class="project-tags">
-        <span class="ptag">In Progress</span>
+        <span class="ptag">Multi-Agent</span>
+        <span class="ptag">Edge Computing</span>
+        <span class="ptag">PWA</span>
+        <span class="ptag">Real-Time Alerts</span>
+        <span class="ptag">LLM</span>
+      </div>
+      <div class="project-actions">
+        <a href="https://github.com/praveenantony12/deal-scout-ai" target="_blank" class="project-github">
+          View Code <span class="arrow">→</span>
+        </a>
+        <a href="#" class="project-demo" title="Demo coming soon" target="_blank">
+          <span class="demo-icon">🚀</span> Launch App
+        </a>
       </div>
     </div>
 
-    <!-- Placeholder 6 -->
-    <div class="project-card placeholder fade-up" style="transition-delay:0.5s">
-      <div class="project-num">06 / Coming Soon</div>
-      <span class="project-icon">🔭</span>
-      <div class="project-title">TBD — AI Systems</div>
+    <!-- Flow Pilot -->
+    <div class="project-card fade-up" style="transition-delay:0.5s">
+      <div class="project-num">06 / Agentic Systems · Workflow Orchestration</div>
+      <span class="project-icon">⚙️</span>
+      <div class="project-title">FlowPilot</div>
       <p class="project-desc">
-        The frontier moves fast. So does the portfolio.
+        Enterprise MCP-powered workflow orchestration system that automates the full incident-response lifecycle across variosu plaforms(ServiceNow, Jira, Microsoft Teams etc.) - featuring a LangGraph state machine, human-in-the-loop approval gates, real-time Angular dashboard via SSE, PostgreSQL persistence, and a full Docker stack.
       </p>
       <div class="project-tags">
-        <span class="ptag">In Progress</span>
+        <span class="ptag">Python</span>
+        <span class="ptag">FASTAPI</span>
+        <span class="ptag">MCP</span>
+        <span class="ptag">LangGraph</span>
+        <span class="ptag">Angular</span>
+        <span class="ptag">PostgreSQL</span>
+        <span class="ptag">Docker</span>
+        <span class="ptag">SSE</span>
       </div>
+      <div class="project-private">🔒 Private / Enterprise</div>
+    </div>
+
+    <!-- LeadDev AI Platform -->
+    <div class="project-card fade-up" style="transition-delay:0.5s">
+      <div class="project-num">07 / Multi-Agent Platform · DevOps Automation</div>
+      <span class="project-icon">🧩</span>
+      <div class="project-title">LeapDev AI Platform</div>
+      <p class="project-desc">
+        Autonomous developer agent platform that takes a Jira story end-to-end - breaking it into tasks, then autonomously planning, coding, reviewing, and running CI/CD - before submitting a PR for human approval. All agent-generated code executes inside an isolated Docker sandbox with no network access, token budget governance, circuit breakres, and prompt injection sanitization at every boundary.
+      </p>
+      <div class="project-tags">
+        <span class="ptag">Python</span>
+        <span class="ptag">FASTAPI</span>
+        <span class="ptag">Multi-Agent</span>
+        <span class="ptag">LangGraph</span>
+        <span class="ptag">Docker Sandbox</span>
+        <span class="ptag">PostgreSQL</span>
+        <span class="ptag">Jira API</span>
+        <span class="ptag">Prompt Injection Guard</span>
+        <span class="ptag">OTEL</span>
+      </div>
+      <div class="project-private">🔒 Private / Enterprise</div>
+    </div>
+
+    <!-- ConfluxAI -->
+    <div class="project-card fade-up" style="transition-delay:0.5s">
+      <div class="project-num">08 / Enterprise RAG · Knowledge Retrieval</div>
+      <span class="project-icon">🔍</span>
+      <div class="project-title">ConfluxAI</div>
+      <p class="project-desc">
+        Enterprise-grade RAG system that acts like "Google for your confluence" - employees ask natural-langugage questions and recieve accurate, cited answers synthesized from internal documentation. Built with FAISS vector store, LangGraph orchestration for ambuiguity detection and milti-turn clarification, an Angular answer, panel with source cards, a feedback loop, and an analytics dashboard with full Docker deployment.
+      </p>
+      <div class="project-tags">
+        <span class="ptag">Python</span>
+        <span class="ptag">FASTAPI</span>
+        <span class="ptag">LangGraph</span>
+        <span class="ptag">RAG</span>
+        <span class="ptag">FAISS</span>
+        <span class="ptag">Angular</span>
+        <span class="ptag">LLM</span>
+        <span class="ptag">Docker</span>
+      </div>
+      <div class="project-private">🔒 Private / Enterprise</div>
     </div>
 
   </div>
@@ -1488,7 +1603,7 @@ Experience: 10+ years full-stack, specialising in agentic AI, Python, Node.js, T
 <!-- FOOTER -->
 <footer>
   <div class="footer-left">
-    © 2025 <span>Praveen Antony</span> · Built with intention &amp; Claude API
+    © 2026 <span>Praveen Antony</span> · Built with intention
   </div>
   <div class="footer-right">
     <a href="https://www.linkedin.com/in/praveenantony12/" target="_blank" class="footer-link">LinkedIn</a>
@@ -1526,15 +1641,20 @@ document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
 
 /* ─── CHAT ──────────────────────────────────────── */
 const PROFILE = `
-You are an AI agent representing Praveen Antony, a Full-Stack AI Developer with 10+ years of experience now specialising in agentic AI systems.
+You are an AI agent representing Praveen Antony, a Full-Stack AI Developer with 17+ years of experience now specialising in agentic AI systems.
 
 About Praveen:
-- 10+ years in full-stack engineering (Python, Node.js/TypeScript, React/Next.js, AWS/GCP/Azure)
+- 17+ years in full-stack engineering (Python, Node.js/TypeScript, React/Next.js, AWS/GCP/Azure)
 - Transitioning into AI engineering with a focus on multi-agent orchestration, guardrails, and production-ready agentic workflows
 - Projects:
   1. Dev Agent & PR Generator: A multi-agent system (Planner, Developer, Reviewer, CI/CD) that takes a GitHub user story and autonomously generates a mergeable PR
   2. Bedtime Story Architect: An AI-driven PWA for kids that generates personalised narrated and illustrated bedtime stories in real time
   3. Fifty Six Card Game: A classic 6-player South Indian card game rebuilt as an online PWA with a full rules engine and AI bots replicating human-like gameplay
+  4. DealScoutAI: An AI-powered deal intelligence platform that automatically extracts, categorizes, and analyzes sales deals from emails, calendars, and CRM data
+  5. FlowPilot: Enterprise MCP-powered incident-response workflow agent \u2014 automates the full incident-response lifecycle across variosu plaforms(ServiceNow, Jira, Microsoft Teams etc.) - featuring a LangGraph state machine, human-in-the-loop approval gates, real-time Angular dashboard via SSE, PostgreSQL persistence, and a full Docker stack.
+  6. LeapDev AI Platform: Autonomous developer agent platform \u2014 takes a Jira story end-to-end through task planning, code generation, mutli-agent review, CI/CD, and PR creation. All agent code executes in an isolated Docker sandbox with no ntework access, token-budget governance, circuit breakers, and prompt-injection sanitization. 
+  7. ConfluxAI: Enterprise RAG search copilot for Confluence \u2014 employees ask natural-language questions and get accurate, cited answers. Built with FAISS vector store, LangGraph multi-turn clarification flow, Angular answer panel with source cards, feedback loop, and analytics dashboard.
+
 - LinkedIn: https://www.linkedin.com/in/praveenantony12/
 - GitHub: https://github.com/praveenantony12
 
@@ -1792,7 +1912,7 @@ inputEl.addEventListener('keydown', e => {
     title: 'Full-Stack AI Developer',
     linkedin: 'linkedin.com/in/praveenantony12',
     github: 'github.com/praveenantony12',
-    summary: '10+ years of full-stack engineering experience, now specialising in agentic AI systems — building multi-agent orchestration workflows with guardrails, security, and production-readiness at the core.',
+    summary: '17+ years of full-stack engineering experience, now specialising in agentic AI systems — building multi-agent orchestration workflows with guardrails, security, and production-readiness at the core.',
     skills: [
       'Python','LangChain','LLMs','Agentic Workflows','Multi-Agent Orchestration',
       'Node.js','TypeScript','React','Next.js','PWA',
@@ -1815,6 +1935,26 @@ inputEl.addEventListener('keydown', e => {
         name: 'Fifty Six — Card Game AI',
         desc: 'Classic 6-player South Indian partnership card game rebuilt as a full PWA with a complete rules engine and AI bots replicating human-like strategic gameplay.',
         tags: ['Game AI','Rules Engine','React','PWA','Node.js']
+      },
+      {
+        name: 'DealScout AI — Deal Intelligence',
+        desc: 'An agentic PWA that autonomously tracks product prices across retailers.',
+        tags: ['Multi-Agent','Edge Computing','PWA','Real-Time Alerts','LLM']
+      },
+      {
+        name: 'FlowPilot — Workflow Automation',
+        desc: 'Enterprise MCP-powered incident response workflow agent \u2014 LangGraph state machine, FastAPI backend, React frontend, Angular SSE dashboard, PostgreSQL persistence, Docker full-stack deployment.',
+        tags: ['Python', 'LangGraph', 'FastAPI', 'MCP', 'Angular', 'PostgreSQL', 'Docker', 'SSE']
+      },
+      {
+        name: 'LeapDev AI Platform',
+        desc: 'Autonomous developer agent platform - takes a Jira story end-to-end through planning, coding, review, CI/CD, and PR creation. All code run in an isolated Docker sandbox with prompt-injection guards, token budgets and circuit breakers.',
+        tags: ['Python', 'LangGraph', 'Multi-Agent', 'FastAPI', 'Jira API', 'Prompt Injection Guard', 'OTEL']
+      },
+      {
+        name: 'ConfluxAI',
+        desc: 'Enterprise RAG-powered Confluence search copilot - natural-language questions answered with inline citations, ambuiguity clarification flow, feedback loop and analytics dashboard.',
+        tags: ['Python', 'LangGraph', 'RAG', 'FastAPI', 'FAISS', 'Angular', 'LLM', 'Docker']
       }
     ],
     experience: [
@@ -1824,7 +1964,7 @@ inputEl.addEventListener('keydown', e => {
         'Building production-ready AI applications across Python backend and React/Next.js frontend'
       ]},
       { role: 'Senior Full-Stack Engineer', period: '2015 – 2023', bullets: [
-        '10+ years shipping production software across cloud platforms (AWS, GCP, Azure)',
+        '17+ years shipping production software across cloud platforms (AWS, GCP, Azure)',
         'Led full-stack architecture for enterprise applications using Node.js, TypeScript, and React',
         'Designed CI/CD pipelines, containerised workloads with Docker, and owned observability'
       ]}
@@ -1841,7 +1981,11 @@ Your job: given a job description, output a JSON object (and ONLY JSON, no markd
   "tailoredBullets": {
     "devAgent": [<1-2 bullet strings highlighting aspects relevant to this JD>],
     "storyArchitect": [<1 bullet string>],
-    "fiftySize": [<1 bullet string>]
+    "fiftySix": [<1 bullet string>],
+    "dealScout": [<1-2 bullet strings highlighting aspects relevant to this JD>],
+    "flowPilot": [<1-2 bullet strings highlighting aspects relevant to this JD>],
+    "leapDev": [<1-2 bullet strings highlighting aspects relevant to this JD>],
+    "confluxAI": [<1-2 bullet strings highlighting aspects relevant to this JD>]
   },
   "relevantSkills": [<top 10-12 skills to highlight for this role>],
   "gapAnalysis": "<1-2 sentences on areas to discuss or grow into — frame positively as 'areas to explore'>",
@@ -1851,7 +1995,7 @@ Your job: given a job description, output a JSON object (and ONLY JSON, no markd
 Praveen's profile:
 Skills: ${PRAVEEN.skills.join(', ')}
 Projects: Dev Agent & PR Generator (multi-agent LangChain pipeline), Bedtime Story Architect (AI PWA with TTS+image gen), Fifty Six Card Game (game AI + rules engine PWA)
-Experience: 10+ years full-stack, specialising in agentic AI, Python, Node.js, TypeScript, React, AWS/GCP/Azure`;
+Experience: 17+ years full-stack, specialising in agentic AI, Python, Node.js, TypeScript, React, AWS/GCP/Azure`;
 
   function setPipelineStep(idx, state) {
     const steps = document.querySelectorAll('.pipeline-step');
@@ -1920,7 +2064,19 @@ Experience: 10+ years full-stack, specialising in agentic AI, Python, Node.js, T
     <ul>${(data.tailoredBullets?.storyArchitect||[]).map(b=>`<li>${b}</li>`).join('')}</ul>
 
     <p style="margin-bottom:0.3rem;"><strong>Fifty Six — Card Game AI</strong></p>
-    <ul>${(data.tailoredBullets?.fiftySize||[]).map(b=>`<li>${b}</li>`).join('')}</ul>
+    <ul>${(data.tailoredBullets?.fiftySix||[]).map(b=>`<li>${b}</li>`).join('')}</ul>
+
+    <p style="margin-bottom:0.3rem;"><strong>Deal Scout</strong></p>
+    <ul>${(data.tailoredBullets?.dealScout||[]).map(b=>`<li>${b}</li>`).join('')}</ul>
+
+    <p style="margin-bottom:0.3rem;"><strong>Flow Pilot</strong></p>
+    <ul>${(data.tailoredBullets?.flowPilot||[]).map(b=>`<li>${b}</li>`).join('')}</ul>
+
+    <p style="margin-bottom:0.3rem;"><strong>Leap Dev</strong></p>
+    <ul>${(data.tailoredBullets?.leapDev||[]).map(b=>`<li>${b}</li>`).join('')}</ul>
+
+    <p style="margin-bottom:0.3rem;"><strong>Conflux AI</strong></p>
+    <ul>${(data.tailoredBullets?.confluxAI||[]).map(b=>`<li>${b}</li>`).join('')}</ul>
 
     <h2>Matched Skills</h2>
     <p>${(data.matchedSkills||[]).join(' · ')}</p>
@@ -1993,7 +2149,11 @@ Experience: 10+ years full-stack, specialising in agentic AI, Python, Node.js, T
         tailoredBullets: {
           devAgent: ['Built a complete multi-agent pipeline (Planner, Developer, Reviewer, CI/CD) that takes a GitHub user story and autonomously generates a production-ready pull request.'],
           storyArchitect: ['Designed and shipped a real-time AI PWA with TTS and image generation, deployed to production for daily use.'],
-          fiftySize: ['Architected a full rules engine and human-like AI bots for a complex 6-player card game, available as a PWA.']
+          fiftySix: ['Architected a full rules engine and human-like AI bots for a complex 6-player card game, available as a PWA.'],
+          dealScout: ['Built a real-time AI agent that helps real agents find and qualify deals, automating the entire process from lead capture to follow-up.'],
+          flowPilot: ['Built an enterprise-grade MCP-powered workflow orchestration platform with LangGraph that helps businesses automate their workflows, reducing manual work and increasing efficiency.'],
+          leapDev: ['Architected an autonomous developer agent platform that takes a Jira story end-to-end \u2014 from task planning through code generation, multi-agent review, CI/CD, and PR creation \u2014 with all code executing inside an isolated Docker sandbox with prompt injection guards.'],
+          confluxAI: ['Built an enterprise RAG-powered Confluence search copilot \u2014 natural-language questions answered with inline citations from a FAISS vector store, with LangGraph-driven ambuigity clarification, Angular UI, feedback loop, and analytics dashboard.']
         },
         relevantSkills: PRAVEEN.skills.slice(0, 12),
         gapAnalysis: '',
